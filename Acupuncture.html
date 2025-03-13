@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate in Acupuncture LMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            color: #28a745;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .module {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            background: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+        .module:hover {
+            background: #f4f4f4;
+        }
+        .module.completed {
+            background: #e6ffe6;
+            border-color: #28a745;
+        }
+        .content {
+            display: none;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background: #fff;
+            border-radius: 0 0 8px 8px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .hidden {
+            display: none;
+        }
+        .quiz {
+            margin-top: 15px;
+        }
+        .quiz button {
+            margin: 5px;
+            background: #007bff;
+        }
+        .quiz button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #celebrateBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 16px;
+        }
+        .progress-bar {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress {
+            height: 20px;
+            background: #28a745;
+            border-radius: 5px;
+            width: 0;
+            transition: width 0.5s ease;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #ffc107;
+            color: #333;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .badge.completed {
+            background: #28a745;
+            color: #fff;
+        }
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .pagination button {
+            margin: 0 5px;
+            padding: 8px 12px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background: #0056b3;
+        }
+        .pagination button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .continue-btn {
+            background: #17a2b8;
+            margin-top: 20px;
+        }
+        .continue-btn:hover {
+            background: #138496;
+        }
+        .module-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 315px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #f4f4f4;
+        }
+        .resource-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+        .dashboard {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .timer {
+            font-size: 14px;
+            color: #dc3545;
+            margin-top: 5px;
+        }
+        .feedback {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .feedback textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            resize: vertical;
+        }
+        .feedback button {
+            background: #17a2b8;
+        }
+        .feedback button:hover {
+            background: #138496;
+        }
+        .celebration {
+            margin: 20px 0;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1> Acupuncture</h1>
+    <p style="text-align: center;">Click on a module to expand and start learning.</p>
+
+    <!-- Progress Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <h2>Your Progress, <span id="userName">Learner</span></h2>
+        <p>Completed Modules: <span id="completedModules">0</span> / 6</p>
+        <p>Total Quiz Score: <span id="totalScore">0</span> / 12</p>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <button onclick="resetProgress()">Reset Progress</button>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <button onclick="showPage(1)">Module 1</button>
+        <button onclick="showPage(2)" id="page2Btn" disabled>Module 2</button>
+        <button onclick="showPage(3)" id="page3Btn" disabled>Module 3</button>
+        <button onclick="showPage(4)" id="page4Btn" disabled>Module 4</button>
+        <button onclick="showPage(5)" id="page5Btn" disabled>Module 5</button>
+        <button onclick="showPage(6)" id="page6Btn" disabled>Module 6</button>
+    </div>
+
+    <!-- Module 1 -->
+    <div id="page1" class="module-container">
+        <div class="module" onclick="toggleModule(1)">
+            Module 1: Introduction to Acupuncture <span class="badge" id="badge1">Not Started</span>
+        </div>
+        <div id="content1" class="content">
+            <img src="https://assets.grok.com/users/042a8867-af98-4b6c-ade4-aeb12af1efcf/InQ4k1sCQ11JlN7a-generated_image.jpg" alt="Introduction to Acupuncture: Historical tools and modern practice" class="module-image">
+            <h3>Historical Evolution</h3>
+            <p>Acupuncture emerged over 2,500 years ago in China, rooted in Taoist philosophy and documented in the *Huangdi Neijing* (circa 100 BCE). Early tools evolved from stones to stainless steel needles, spreading across Asia and later to the West.</p>
+            <h3>Philosophical Foundations</h3>
+            <p>Key concepts include Qi (vital energy), Yin-Yang balance, Five Elements, and Zang-Fu organs.</p>
+            <h3>Scientific Perspective</h3>
+            <p>Research shows acupuncture releases endorphins and modulates pain pathways, used in hospitals for pain and nausea relief.</p>
+            <iframe src="https://www.youtube.com/embed/Fm5Bd-qLtT0" title="Introduction to Qi and Meridians" allowfullscreen></iframe>
+            <h3>Practical Exercise</h3>
+            <p>Reflect on a personal experience (e.g., fatigue) and hypothesize its cause using Yin-Yang theory.</p>
+            <p><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://apps.who.int/iris/bitstream/handle/10665/351993/WH-1979-Dec-eng.pdf&ved=2ahUKEwivlbjq3YWMAxXhXEEAHROuJI8QFnoECBsQAQ&usg=AOvVaw1UwmoLdhHvfOqpevy1uIHg" class="resource-link">Download: Intro to Acupuncture (WHO)(PDF)</a></p>
+            <button onclick="startQuiz(1)">Take Quiz</button>
+            <div id="quiz1" class="quiz hidden">
+                <p>1. What is Qi?</p>
+                <button onclick="checkAnswer(1, 'A', 1)">A. Vital Energy</button>
+                <button onclick="checkAnswer(1, 'B', 1)">B. Blood Circulation</button>
+                <p>2. Which text is a foundational acupuncture source?</p>
+                <button onclick="checkAnswer(1, 'A', 2)">A. Huangdi Neijing</button>
+                <button onclick="checkAnswer(1, 'B', 2)">B. Hippocratic Corpus</button>
+                <p id="result1" class="result"></p>
+                <p class="timer" id="timer1">Time Left: 60s</p>
+            </div>
+            <button id="continue1" class="continue-btn hidden" onclick="continueToNextModule(1)">Continue to Module 2</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback1" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(1)">Submit Feedback</button>
+                <p id="feedbackLog1"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 2 -->
+    <div id="page2" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(2)">
+            Module 2: Meridian Systems and Point Location <span class="badge" id="badge2">Locked</span>
+        </div>
+        <div id="content2" class="content">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6X5k25hhjpIcpOjx_9ujbkWx63t1rmiruLYAC2U5FvA&s" alt="Meridian Systems: Diagram of key acupuncture points" class="module-image">
+            <h3>Meridian Anatomy</h3>
+            <p>12 primary meridians link to Zang-Fu organs, following a diurnal cycle (e.g., Lung: 3–5 AM).</p>
+            <table>
+                <tr><th>Meridian</th><th>Organ</th><th>Peak Time</th></tr>
+                <tr><td>Lung (LU)</td><td>Lungs</td><td>3–5 AM</td></tr>
+                <tr><td>Stomach (ST)</td><td>Stomach</td><td>7–9 AM</td></tr>
+            </table>
+            <h3>Acupoint Mapping</h3>
+            <p>Points like LU-7 (1.5 cun above wrist), ST-36 (3 cun below knee), and LI-4 (thumb-index web) are measured in *cun*.</p>
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Locating ST-36 and LI-4" allowfullscreen></iframe>
+            <h3>Practical Exercise</h3>
+            <p>Locate ST-36 on yourself, measure 3 cun below the knee, and note sensations.</p>
+            <p><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://chiro.org/acupuncture/ABSTRACTS/Acupuncture_Points.pdf&ved=2ahUKEwjt0NnL1oaMAxUkUUEAHUfTChEQFnoECC0QAQ&usg=AOvVaw3zYLHAAVYofucwxx2cajBM" class="resource-link">Download: Meridian Chart (PDF)</a></p>
+            <button onclick="startQuiz(2)">Take Quiz</button>
+            <div id="quiz2" class="quiz hidden">
+                <p>1. Which meridian is associated with digestion?</p>
+                <button onclick="checkAnswer(2, 'A', 1)">A. Stomach Meridian</button>
+                <button onclick="checkAnswer(2, 'B', 1)">B. Lung Meridian</button>
+                <p>2. Where is ST-36 located?</p>
+                <button onclick="checkAnswer(2, 'A', 2)">A. Below the knee</button>
+                <button onclick="checkAnswer(2, 'B', 2)">B. On the wrist</button>
+                <p id="result2" class="result"></p>
+                <p class="timer" id="timer2">Time Left: 60s</p>
+            </div>
+            <button id="continue2" class="continue-btn hidden" onclick="continueToNextModule(2)">Continue to Module 3</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback2" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(2)">Submit Feedback</button>
+                <p id="feedbackLog2"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 3 -->
+    <div id="page3" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(3)">
+            Module 3: Needling Techniques <span class="badge" id="badge3">Locked</span>
+        </div>
+        <div id="content3" class="content">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuvGRvmCJ5QGjqMjVldSE2zfQ4O52YpJU5mQ&s" alt="Needling Techniques: Overview of needle types" class="module-image">
+            <h3>Needle Types</h3>
+            <p>Filiform (0.12–0.35 mm), press needles (1–3 mm), and intradermal (3–6 mm) vary by use.</p>
+            <h3>Insertion Techniques</h3>
+            <img src="https://assets.grok.com/users/042a8867-af98-4b6c-ade4-aeb12af1efcf/CSPHAm4PzcsUzE94-generated_image.jpg" alt="Insertion Technique: Demonstrating De Qi" class="module-image">
+            <p>Perpendicular (0.5–3 cun), oblique (0.3–1.5 cun), and subcutaneous (0.1–0.3 cun) depend on anatomy. De Qi (ache, warmth) confirms Qi activation.</p>
+            <iframe src="https://www.youtube.com/embed/=mBvS5nVgcVw&pp=ygUKI2Nvbmdwb2ludA%3D%3D" title="Needling ST-36 with De Qi" allowfullscreen></iframe>
+            <h3>Practical Exercise</h3>
+            <p>Practice perpendicular insertion at 1 cun depth on a foam pad.</p>
+            <p><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://apps.who.int/iris/bitstream/10665/66007/1/WHO_EDM_TRM_99.1.pdf&ved=2ahUKEwiV5KWx2oaMAxXBVUEAHbztMUwQFnoECBUQAQ&usg=AOvVaw21T5ZEUjKbsu69HSY3CEMs" class="resource-link">Download: Needling Guide (PDF)</a></p>
+            <button onclick="startQuiz(3)">Take Quiz</button>
+            <div id="quiz3" class="quiz hidden">
+                <p>1. What is the typical diameter range of filiform needles?</p>
+                <button onclick="checkAnswer(3, 'A', 1)">A. 0.12 to 0.35 mm</button>
+                <button onclick="checkAnswer(3, 'B', 1)">B. 1 to 2 mm</button>
+                <p>2. What sensation indicates effective needling?</p>
+                <button onclick="checkAnswer(3, 'A', 2)">A. De Qi</button>
+                <button onclick="checkAnswer(3, 'B', 2)">B. Sharp Pain</button>
+                <p id="result3" class="result"></p>
+                <p class="timer" id="timer3">Time Left: 60s</p>
+            </div>
+            <button id="continue3" class="continue-btn hidden" onclick="continueToNextModule(3)">Continue to Module 4</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback3" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(3)">Submit Feedback</button>
+                <p id="feedbackLog3"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 4 -->
+    <div id="page4" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(4)">
+            Module 4: Clinical Applications <span class="badge" id="badge4">Locked</span>
+        </div>
+        <div id="content4" class="content">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXTgFdDOzghqk45OPc_nwxNLab1lhKpho_8uuebtJ9B_2SlUOMqlPZHds&s" alt="Clinical Applications: Acupuncture treatment overview" class="module-image">
+            <h3>Therapeutic Scope</h3>
+            <p>Acupuncture treats pain (LI-4), anxiety (HT-7), and digestive issues (ST-36).</p>
+            <h3>Diagnosis and Treatment</h3>
+            <img src="https://media.istockphoto.com/id/670240348/photo/young-woman-getting-acupuncture-treatment.jpg?s=612x612&w=0&k=20&c=_xbqqZBgbrTZSk4V11sSNjIBt5t7TvUod0FZq25ZYpg=" alt="Diagnosis and Treatment: Clinical acupuncture session" class="module-image">
+            <p>Uses pulse, tongue, and history. Example: Migraine (LI-4, GB-20).</p>
+            <iframe src="https://www.youtube.com/embed/L3I18KgVbWw" title="Treating Migraines with GB-20" allowfullscreen></iframe>
+            <h3>Practical Exercise</h3>
+            <p>Design a 6-session plan for insomnia using HT-7 and SP-6.</p>
+            <p><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://hq.moh.gov.my/tcm/ms/upload/garispanduan/amalan/acupuncture2017.pdf&ved=2ahUKEwj1rtX43oaMAxUCXEEAHaCeITYQFnoECBwQAQ&usg=AOvVaw3lMxNVu82NQXJWkQ7InsK_" class="resource-link">Download: Clinical Point Guide (PDF)</a></p>
+            <button onclick="startQuiz(4)">Take Quiz</button>
+            <div id="quiz4" class="quiz hidden">
+                <p>1. Which condition is commonly treated with acupuncture?</p>
+                <button onclick="checkAnswer(4, 'A', 1)">A. Chronic Pain</button>
+                <button onclick="checkAnswer(4, 'B', 1)">B. Vision Impairment</button>
+                <p>2. Which point treats nausea?</p>
+                <button onclick="checkAnswer(4, 'A', 2)">A. PC-6</button>
+                <button onclick="checkAnswer(4, 'B', 2)">B. LI-11</button>
+                <p id="result4" class="result"></p>
+                <p class="timer" id="timer4">Time Left: 60s</p>
+            </div>
+            <button id="continue4" class="continue-btn hidden" onclick="continueToNextModule(4)">Continue to Module 5</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback4" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(4)">Submit Feedback</button>
+                <p id="feedbackLog4"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 5 -->
+    <div id="page5" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(5)">
+            Module 5: Safety and Ethics <span class="badge" id="badge5">Locked</span>
+        </div>
+        <div id="content5" class="content">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKrA6H-vHnBv_4y7boPa48MVOQluNRdT1brVnUllwIEA&s" alt="Safety and Ethics: Professional acupuncture setup" class="module-image">
+            <h3>Safety Protocols</h3>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigndQk9JtRsgGXQp8w5Wf9SlBDth50ObghCxYkmuHdA&s" alt="Sterile acupuncture tools and safety measures" class="module-image">
+            <p>Use single-use needles, avoid lungs (LU-1), and note contraindications (e.g., pregnancy).</p>
+            <h3>Ethical Practice</h3>
+            <p>Requires consent, confidentiality, and competence.</p>
+            <iframe src="https://www.youtube.com/embed/AirPz6s_Q8" title="Safe Needling at LU-1" allowfullscreen></iframe>
+            <h3>Practical Exercise</h3>
+            <p>Draft a consent form for a migraine patient.</p>
+            <p><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://acupuncturealberta.ca/wp-content/uploads/2021/11/CAA-Safety-Handbook.pdf&ved=2ahUKEwi2oqvZ5oaMAxVsTkEAHevnEA4QFnoECDMQAQ&usg=AOvVaw2tOKABnKub8Md661N3CQ6k" class="resource-link">Download: Safety Checklist (PDF)</a></p>
+            <button onclick="startQuiz(5)">Take Quiz</button>
+            <div id="quiz5" class="quiz hidden">
+                <p>1. What is a key safety protocol?</p>
+                <button onclick="checkAnswer(5, 'A', 1)">A. Single-use needles</button>
+                <button onclick="checkAnswer(5, 'B', 1)">B. Reusable needles</button>
+                <p>2. Which agency qREGULATES needle disposal?</p>
+                <button onclick="checkAnswer(5, 'A', 2)">A. OSHA</button>
+                <button onclick="checkAnswer(5, 'B', 2)">B. FDA</button>
+                <p id="result5" class="result"></p>
+                <p class="timer" id="timer5">Time Left: 60s</p>
+            </div>
+            <button id="continue5" class="continue-btn hidden" onclick="continueToNextModule(5)">Continue to Module 6</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback5" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(5)">Submit Feedback</button>
+                <p id="feedbackLog5"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 6 -->
+    <div id="page6" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(6)">
+            Module 6: Case Studies and Practical Application <span class="badge" id="badge6">Locked</span>
+        </div>
+        <div id="content6" class="content">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToQo8wo3kWf0HVgH95viu_hMskJ8MQRgT_Fp7gkMqmJQ&s" alt="Case Studies: Practical acupuncture application" class="module-image">
+            <h3>Case Studies</h3>
+            <ul>
+                <li><strong>Chronic Back Pain</strong>: 45/M, BL-23/ST-36, 10 sessions, pain from 7/10 to 2/10.</li>
+                <li><strong>Migraines</strong>: 32/F, GB-20/LI-4, 8 sessions, reduced to 1/month.</li>
+            </ul>
+            <h3>Treatment Protocol</h3>
+            <p>Assess, select points, plan 6–12 sessions, evaluate outcomes.</p>
+            <iframe src="https://www.youtube.com/embed/wHKWB3keHdA" title="Case Study: Back Pain Treatment" allowfullscreen></iframe>
+            <h3>Practical Exercise</h3>
+            <p>Plan for persistent migraines adding LV-3 to Case 2.</p>
+            <p><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=http://chinesemedicine.ac.nz/wp-content/uploads/Congress/ASB%2520Auditorium-1330-1600-Vahideh%2520Toossi.pdf&ved=2ahUKEwiT4POT9IaMAxWYUkEAHSb3OvUQFnoECBYQAQ&usg=AOvVaw1v80N2DTAbq6UIG3bmr2LF" class="resource-link">Download: Case Study Template (PDF)</a></p>
+            <button onclick="startQuiz(6)">Take Quiz</button>
+            <div id="quiz6" class="quiz hidden">
+                <p>1. What condition was treated in Case 1?</p>
+                <button onclick="checkAnswer(6, 'A', 1)">A. Chronic lower back pain</button>
+                <button onclick="checkAnswer(6, 'B', 1)">B. Migraines</button>
+                <p>2. Which point was used in Case 2?</p>
+                <button onclick="checkAnswer(6, 'A', 2)">A. GB-20</button>
+                <button onclick="checkAnswer(6, 'B', 2)">B. ST-25</button>
+                <p id="result6" class="result"></p>
+                <p class="timer" id="timer6">Time Left: 60s</p>
+            </div>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback6" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(6)">Submit Feedback</button>
+                <p id="feedbackLog6"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration -->
+    <div class="celebration" id="celebration" style="display: none;">
+        <h2>Congratulations, <span id="celebrateName">Learner</span>!</h2>
+        <p>You’ve completed all 6 modules!</p>
+        <button onclick="shareSuccess()">Share Your Success</button>
+    </div>
+    <button id="celebrateBtn" onclick="showCelebration()" disabled>Celebrate Your Journey</button>
+
+    <script>
+        const totalModules = 6;
+        const correctAnswers = {
+            1: { 1: 'A', 2: 'A' },
+            2: { 1: 'A', 2: 'A' },
+            3: { 1: 'A', 2: 'A' },
+            4: { 1: 'A', 2: 'A' },
+            5: { 1: 'A', 2: 'A' },
+            6: { 1: 'A', 2: 'A' }
+        };
+        const badgeNames = {
+            1: "Qi Master",
+            2: "Meridian Explorer",
+            3: "Needle Artisan",
+            4: "Healing Practitioner",
+            5: "Safety Guardian",
+            6: "Case Study Sage"
+        };
+        let completedModules = 0;
+        let quizScores = {};
+        let totalScore = 0;
+        let timers = {};
+        let userName = localStorage.getItem('userName') || 'Learner';
+
+        function initializeProgress() {
+            completedModules = 0;
+            totalScore = 0;
+            document.getElementById('userName').innerText = userName;
+            for (let i = 1; i <= totalModules; i++) {
+                const status = localStorage.getItem(`quiz${i}`);
+                if (status === "completed") {
+                    completedModules++;
+                    totalScore += 2;
+                    document.getElementById(`badge${i}`).innerText = `${badgeNames[i]} ✔`;
+                    document.getElementById(`badge${i}`).classList.add("completed");
+                    document.getElementById(`page${i}`).querySelector('.module').classList.add("completed");
+                    unlockNextModule(i);
+                    document.getElementById(`continue${i}`).classList.remove("hidden");
+                } else {
+                    document.getElementById(`badge${i}`).innerText = i === 1 ? "Not Started" : "Locked";
+                }
+                const feedback = localStorage.getItem(`feedback${i}`);
+                if (feedback) document.getElementById(`feedbackLog${i}`).innerText = `Your Feedback: "${feedback}"`;
+            }
+            updateDashboard();
+            checkCompletion();
+        }
+
+        function unlockNextModule(currentModuleId) {
+            const nextModuleId = currentModuleId + 1;
+            if (nextModuleId <= totalModules) {
+                const nextModule = document.getElementById(`page${nextModuleId}`);
+                const nextButton = document.getElementById(`page${nextModuleId}Btn`);
+                nextModule.classList.remove("locked");
+                nextButton.disabled = false;
+                document.getElementById(`badge${nextModuleId}`).innerText = "Not Started";
+                console.log(`Unlocked Module ${nextModuleId}`);
+            }
+        }
+
+        function updateDashboard() {
+            document.getElementById("completedModules").innerText = completedModules;
+            document.getElementById("totalScore").innerText = totalScore;
+            const progress = (completedModules / totalModules) * 100;
+            document.getElementById("progress").style.width = `${progress}%`;
+        }
+
+        function checkCompletion() {
+            if (completedModules === totalModules) {
+                document.getElementById("celebrateBtn").disabled = false;
+            }
+        }
+
+        function toggleModule(moduleId) {
+            const content = document.getElementById(`content${moduleId}`);
+            content.style.display = content.style.display === "block" ? "none" : "block";
+        }
+
+        function startQuiz(moduleId) {
+            document.getElementById(`quiz${moduleId}`).classList.remove("hidden");
+            quizScores[moduleId] = { 1: false, 2: false };
+            startTimer(moduleId);
+        }
+
+        function startTimer(moduleId) {
+            let timeLeft = 60;
+            const timerElement = document.getElementById(`timer${moduleId}`);
+            timers[moduleId] = setInterval(() => {
+                timeLeft--;
+                timerElement.innerText = `Time Left: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timers[moduleId]);
+                    timerElement.innerText = "Time’s Up!";
+                    document.querySelectorAll(`#quiz${moduleId} button`).forEach(btn => btn.disabled = true);
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(moduleId, answer, questionNum) {
+            const resultElement = document.getElementById(`result${moduleId}`);
+            if (answer === correctAnswers[moduleId][questionNum]) {
+                quizScores[moduleId][questionNum] = true;
+                totalScore++;
+                updateQuizResult(moduleId);
+            } else {
+                resultElement.innerHTML = `❌ Incorrect on Question ${questionNum}.`;
+                resultElement.style.color = "#dc3545";
+            }
+        }
+
+        function updateQuizResult(moduleId) {
+            const resultElement = document.getElementById(`result${moduleId}`);
+            const quizButtons = document.querySelectorAll(`#quiz${moduleId} button`);
+            const allCorrect = Object.values(quizScores[moduleId]).every(score => score);
+            if (allCorrect) {
+                resultElement.innerHTML = `✅ All Correct! Score: 2/2 - Badge: ${badgeNames[moduleId]}`;
+                resultElement.style.color = "#28a745";
+                localStorage.setItem(`quiz${moduleId}`, "completed");
+                document.getElementById(`badge${moduleId}`).innerText = `${badgeNames[moduleId]} ✔`;
+                document.getElementById(`badge${moduleId}`).classList.add("completed");
+                document.getElementById(`page${moduleId}`).querySelector('.module').classList.add("completed");
+                completedModules++;
+                updateDashboard();
+                unlockNextModule(moduleId);
+                document.getElementById(`continue${moduleId}`).classList.remove("hidden");
+                quizButtons.forEach(btn => btn.disabled = true);
+                clearInterval(timers[moduleId]);
+                document.getElementById(`timer${moduleId}`).innerText = "Quiz Completed!";
+                console.log(`Module ${moduleId} completed, continue button shown`);
+            } else {
+                resultElement.innerHTML = `✅ Correct so far. Score: ${Object.values(quizScores[moduleId]).filter(s => s).length}/2`;
+                resultElement.style.color = "#28a745";
+            }
+        }
+
+        function continueToNextModule(currentModuleId) {
+            const nextModuleId = currentModuleId + 1;
+            if (nextModuleId <= totalModules) {
+                showPage(nextModuleId);
+                toggleModule(nextModuleId);
+                window.scrollTo(0, 0); // Scroll to top
+                console.log(`Navigated to Module ${nextModuleId} and scrolled to top`);
+            }
+        }
+
+        function submitFeedback(moduleId) {
+            const feedbackText = document.getElementById(`feedback${moduleId}`).value.trim();
+            if (feedbackText) {
+                localStorage.setItem(`feedback${moduleId}`, feedbackText);
+                document.getElementById(`feedbackLog${moduleId}`).innerText = `Your Feedback: "${feedbackText}"`;
+                alert("Thank you for your feedback!");
+                document.getElementById(`feedback${moduleId}`).value = "";
+            }
+        }
+
+        function showCelebration() {
+            document.getElementById('celebrateName').innerText = userName;
+            document.getElementById('celebration').style.display = 'block';
+            window.scrollTo(0, 0); // Scroll to top for celebration
+        }
+
+        function shareSuccess() {
+            alert("Great job! Share your success (simulated).");
+        }
+
+        function showPage(pageNumber) {
+            document.querySelectorAll(".module-container").forEach((page, index) => {
+                page.classList.toggle("hidden", index + 1 !== pageNumber);
+            });
+            window.scrollTo(0, 0); // Scroll to top
+            console.log(`Showing page ${pageNumber} and scrolled to top`);
+        }
+
+        function resetProgress() {
+            if (confirm("Reset all progress?")) {
+                localStorage.clear();
+                userName = prompt("Enter your name:", "Learner") || "Learner";
+                localStorage.setItem('userName', userName);
+                location.reload();
+            }
+        }
+
+        window.onload = () => {
+            if (!localStorage.getItem('userName')) {
+                userName = prompt("Welcome! Enter your name:", "Learner") || "Learner";
+                localStorage.setItem('userName', userName);
+            }
+            initializeProgress();
+            showPage(1);
+        };
+    </script>
+
+</body>
+</html>
