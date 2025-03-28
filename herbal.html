@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate in Herbal Medicine LMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            color: #28a745;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .module {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            background: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+        .module:hover {
+            background: #f4f4f4;
+        }
+        .module.completed {
+            background: #e6ffe6;
+            border-color: #28a745;
+        }
+        .content {
+            display: none;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background: #fff;
+            border-radius: 0 0 8px 8px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .hidden {
+            display: none;
+        }
+        .quiz {
+            margin-top: 15px;
+        }
+        .quiz button {
+            margin: 5px;
+            background: #007bff;
+        }
+        .quiz button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #celebrateBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 16px;
+        }
+        .progress-bar {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress {
+            height: 20px;
+            background: #28a745;
+            border-radius: 5px;
+            width: 0;
+            transition: width 0.5s ease;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #ffc107;
+            color: #333;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .badge.completed {
+            background: #28a745;
+            color: #fff;
+        }
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .pagination button {
+            margin: 0 5px;
+            padding: 8px 12px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background: #0056b3;
+        }
+        .pagination button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .continue-btn {
+            background: #17a2b8;
+            margin-top: 20px;
+        }
+        .continue-btn:hover {
+            background: #138496;
+        }
+        .module-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 315px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #f4f4f4;
+        }
+        .resource-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+        .dashboard {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .timer {
+            font-size: 14px;
+            color: #dc3545;
+            margin-top: 5px;
+        }
+        .feedback {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .feedback textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            resize: vertical;
+        }
+        .feedback button {
+            background: #17a2b8;
+        }
+        .feedback button:hover {
+            background: #138496;
+        }
+        .celebration {
+            margin: 20px 0;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .herb-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background: #fff;
+        }
+        .herb-card h4 {
+            color: #28a745;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Certificate in Herbal Medicine</h1>
+    <p style="text-align: center;">Click on a module to expand and start learning.</p>
+
+    <!-- Progress Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <h2>Your Progress, <span id="userName">Learner</span></h2>
+        <p>Completed Modules: <span id="completedModules">0</span> / 6</p>
+        <p>Total Quiz Score: <span id="totalScore">0</span> / 12</p>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <button onclick="resetProgress()">Reset Progress</button>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <button onclick="showPage(1)">Module 1</button>
+        <button onclick="showPage(2)" id="page2Btn" disabled>Module 2</button>
+        <button onclick="showPage(3)" id="page3Btn" disabled>Module 3</button>
+        <button onclick="showPage(4)" id="page4Btn" disabled>Module 4</button>
+        <button onclick="showPage(5)" id="page5Btn" disabled>Module 5</button>
+        <button onclick="showPage(6)" id="page6Btn" disabled>Module 6</button>
+    </div>
+
+    <!-- Module 1 -->
+    <div id="page1" class="module-container">
+        <div class="module" onclick="toggleModule(1)">
+            Module 1: Foundations of Herbal Medicine <span class="badge" id="badge1">Not Started</span>
+        </div>
+        <div id="content1" class="content">
+            <img src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Historical herbal medicine" class="module-image">
+            <h3>Historical Context</h3>
+            <p>Herbal medicine dates back over 60,000 years, with evidence found in Neanderthal burial sites. Major traditions include Traditional Chinese Medicine (5000 BCE), Ayurveda (3000 BCE), and Western herbalism documented by Dioscorides (1st century CE).</p>
+            
+            <h3>Philosophical Approaches</h3>
+            <p>Key concepts across traditions:</p>
+            <ul>
+                <li><strong>Traditional Chinese Medicine:</strong> Yin-Yang balance, Qi flow, and the Five Elements</li>
+                <li><strong>Ayurveda:</strong> Doshas (Vata, Pitta, Kapha) and the concept of Prakriti</li>
+                <li><strong>Western Herbalism:</strong> Doctrine of Signatures and humoral theory</li>
+            </ul>
+            
+            <h3>Modern Scientific Perspective</h3>
+            <p>Contemporary research validates many traditional uses through phytochemistry, identifying active compounds like salicin (willow bark → aspirin) and artemisinin (sweet wormwood → malaria treatment).</p>
+            
+            <iframe src="https://www.youtube.com/embed/9QqszdTURsE" title="Introduction to Herbal Medicine" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Research one herb from your local area traditionally used for healing. Document its historical uses and any modern scientific validation.</p>
+            
+            <p><a href="https://www.who.int/health-topics/traditional-complementary-and-integrative-medicine" class="resource-link">WHO Traditional Medicine Resources</a></p>
+            
+            <button onclick="startQuiz(1)">Take Quiz</button>
+            <div id="quiz1" class="quiz hidden">
+                <p>1. Which ancient text is foundational to Western herbalism?</p>
+                <button onclick="checkAnswer(1, 'A', 1)">A. De Materia Medica</button>
+                <button onclick="checkAnswer(1, 'B', 1)">B. The Yellow Emperor's Classic</button>
+                <p>2. What compound in willow bark led to the development of aspirin?</p>
+                <button onclick="checkAnswer(1, 'A', 2)">A. Salicin</button>
+                <button onclick="checkAnswer(1, 'B', 2)">B. Curcumin</button>
+                <p id="result1" class="result"></p>
+                <p class="timer" id="timer1">Time Left: 60s</p>
+            </div>
+            <button id="continue1" class="continue-btn hidden" onclick="continueToNextModule(1)">Continue to Module 2</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback1" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(1)">Submit Feedback</button>
+                <p id="feedbackLog1"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 2 -->
+    <div id="page2" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(2)">
+            Module 2: Major Herbal Traditions <span class="badge" id="badge2">Locked</span>
+        </div>
+        <div id="content2" class="content">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Herbs from different traditions" class="module-image">
+            
+            <h3>Traditional Chinese Medicine (TCM)</h3>
+            <div class="herb-card">
+                <h4>Key Concepts</h4>
+                <p>Focus on balancing Qi through herbs classified by temperature (hot, warm, neutral, cool, cold) and taste (pungent, sweet, sour, bitter, salty).</p>
+                <h4>Signature Herbs</h4>
+                <ul>
+                    <li><strong>Ginseng (Ren Shen):</strong> Adaptogen for energy</li>
+                    <li><strong>Astragalus (Huang Qi):</strong> Immune support</li>
+                    <li><strong>Dang Gui:</strong> Women's health</li>
+                </ul>
+            </div>
+            
+            <h3>Ayurveda</h3>
+            <div class="herb-card">
+                <h4>Key Concepts</h4>
+                <p>Herbs classified by their effects on doshas (Vata, Pitta, Kapha) and their rasa (taste), virya (energy), and vipaka (post-digestive effect).</p>
+                <h4>Signature Herbs</h4>
+                <ul>
+                    <li><strong>Ashwagandha:</strong> Stress adaptogen</li>
+                    <li><strong>Turmeric:</strong> Anti-inflammatory</li>
+                    <li><strong>Triphala:</strong> Digestive tonic</li>
+                </ul>
+            </div>
+            
+            <h3>Western Herbalism</h3>
+            <div class="herb-card">
+                <h4>Key Concepts</h4>
+                <p>Focus on organ systems and physiological effects, with herbs classified as nervines, alteratives, hepatics, etc.</p>
+                <h4>Signature Herbs</h4>
+                <ul>
+                    <li><strong>Echinacea:</strong> Immune support</li>
+                    <li><strong>St. John's Wort:</strong> Nervous system</li>
+                    <li><strong>Milk Thistle:</strong> Liver support</li>
+                </ul>
+            </div>
+            
+            <iframe src="https://www.youtube.com/embed/8y0H7U6Q-is" title="Comparing Herbal Traditions" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Compare how ginger is used in TCM (warming, disperses cold) versus Ayurveda (kindles Agni, reduces Kapha).</p>
+            
+            <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3215408/" class="resource-link">Research: Herbal Medicine Across Cultures</a></p>
+            
+            <button onclick="startQuiz(2)">Take Quiz</button>
+            <div id="quiz2" class="quiz hidden">
+                <p>1. Which system classifies herbs by their effects on doshas?</p>
+                <button onclick="checkAnswer(2, 'A', 1)">A. Ayurveda</button>
+                <button onclick="checkAnswer(2, 'B', 1)">B. TCM</button>
+                <p>2. What is the primary use of Ashwagandha?</p>
+                <button onclick="checkAnswer(2, 'A', 2)">A. Stress adaptation</button>
+                <button onclick="checkAnswer(2, 'B', 2)">B. Pain relief</button>
+                <p id="result2" class="result"></p>
+                <p class="timer" id="timer2">Time Left: 60s</p>
+            </div>
+            <button id="continue2" class="continue-btn hidden" onclick="continueToNextModule(2)">Continue to Module 3</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback2" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(2)">Submit Feedback</button>
+                <p id="feedbackLog2"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 3 -->
+    <div id="page3" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(3)">
+            Module 3: Herbal Pharmacology <span class="badge" id="badge3">Locked</span>
+        </div>
+        <div id="content3" class="content">
+            <img src="https://images.unsplash.com/photo-1519735777090-ec97162dc266?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Herbal chemistry" class="module-image">
+            
+            <h3>Key Phytochemical Groups</h3>
+            <table>
+                <tr><th>Compound Class</th><th>Examples</th><th>Effects</th></tr>
+                <tr><td>Alkaloids</td><td>Morphine, caffeine</td><td>Nervous system effects</td></tr>
+                <tr><td>Glycosides</td><td>Digoxin, salicin</td><td>Cardiac, anti-inflammatory</td></tr>
+                <tr><td>Polyphenols</td><td>Flavonoids, tannins</td><td>Antioxidant, anti-inflammatory</td></tr>
+                <tr><td>Terpenes</td><td>Menthol, artemisinin</td><td>Antimicrobial, aromatic</td></tr>
+            </table>
+            
+            <h3>Herb-Drug Interactions</h3>
+            <div class="herb-card">
+                <h4>Important Interactions</h4>
+                <ul>
+                    <li><strong>St. John's Wort:</strong> Reduces effectiveness of birth control, antidepressants</li>
+                    <li><strong>Ginkgo:</strong> Increases bleeding risk with blood thinners</li>
+                    <li><strong>Licorice:</strong> Raises blood pressure with diuretics</li>
+                </ul>
+            </div>
+            
+            <h3>Dose-Response Relationships</h3>
+            <p>Understanding therapeutic windows - from infusion (1-2 tsp/cup) to tincture (1:5 ratio) to standardized extracts (e.g., 240mg Ginkgo with 24% flavonoids).</p>
+            
+            <iframe src="https://www.youtube.com/embed/0wYc0aLHtuk" title="Herbal Pharmacology Explained" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Research the active compounds in chamomile and their pharmacological effects.</p>
+            
+            <p><a href="https://www.ncbi.nlm.nih.gov/books/NBK92773/" class="resource-link">Herbal Medicine: Biomolecular and Clinical Aspects</a></p>
+            
+            <button onclick="startQuiz(3)">Take Quiz</button>
+            <div id="quiz3" class="quiz hidden">
+                <p>1. Which compound class includes caffeine and morphine?</p>
+                <button onclick="checkAnswer(3, 'A', 1)">A. Alkaloids</button>
+                <button onclick="checkAnswer(3, 'B', 1)">B. Glycosides</button>
+                <p>2. Which herb interacts with blood thinners?</p>
+                <button onclick="checkAnswer(3, 'A', 2)">A. Ginkgo</button>
+                <button onclick="checkAnswer(3, 'B', 2)">B. Echinacea</button>
+                <p id="result3" class="result"></p>
+                <p class="timer" id="timer3">Time Left: 60s</p>
+            </div>
+            <button id="continue3" class="continue-btn hidden" onclick="continueToNextModule(3)">Continue to Module 4</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback3" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(3)">Submit Feedback</button>
+                <p id="feedbackLog3"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 4 -->
+    <div id="page4" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(4)">
+            Module 4: Preparation Methods <span class="badge" id="badge4">Locked</span>
+        </div>
+        <div id="content4" class="content">
+            <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Herbal preparations" class="module-image">
+            
+            <h3>Basic Preparation Techniques</h3>
+            <div class="herb-card">
+                <h4>Infusions</h4>
+                <p>For delicate parts (flowers, leaves): Pour boiling water, steep 5-15 minutes (e.g., chamomile tea).</p>
+                
+                <h4>Decoctions</h4>
+                <p>For hard parts (roots, bark): Simmer 15-45 minutes (e.g., ginger root tea).</p>
+                
+                <h4>Tinctures</h4>
+                <p>Alcohol extracts (typically 1:5 ratio in 40-60% alcohol), macerate 2-6 weeks (e.g., echinacea tincture).</p>
+            </div>
+            
+            <h3>Advanced Preparations</h3>
+            <div class="herb-card">
+                <h4>Standardized Extracts</h4>
+                <p>Concentrated to specific active compounds (e.g., 95% curcumin from turmeric).</p>
+                
+                <h4>Essential Oils</h4>
+                <p>Steam distillation of volatile compounds (e.g., lavender oil).</p>
+                
+                <h4>Poultices/Compresses</h4>
+                <p>Fresh or dried herbs applied topically (e.g., plantain for insect bites).</p>
+            </div>
+            
+            <h3>Dosage Forms Comparison</h3>
+            <table>
+                <tr><th>Form</th><th>Pros</th><th>Cons</th></tr>
+                <tr><td>Tea</td><td>Gentle, hydrating</td><td>Short shelf life</td></tr>
+                <tr><td>Tincture</td><td>Long shelf life, potent</td><td>Alcohol content</td></tr>
+                <tr><td>Capsule</td><td>Convenient, precise</td><td>Less bioavailable</td></tr>
+            </table>
+            
+            <iframe src="https://www.youtube.com/embed/4qF9v5GtKZ8" title="Making Herbal Tinctures" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Prepare a simple infusion with mint leaves and compare its effects to a store-bought peppermint tea.</p>
+            
+            <p><a href="https://www.herbalacademy.com/free-downloads/" class="resource-link">Herbal Preparation Guides</a></p>
+            
+            <button onclick="startQuiz(4)">Take Quiz</button>
+            <div id="quiz4" class="quiz hidden">
+                <p>1. Which preparation is best for tough roots and bark?</p>
+                <button onclick="checkAnswer(4, 'A', 1)">A. Decoction</button>
+                <button onclick="checkAnswer(4, 'B', 1)">B. Infusion</button>
+                <p>2. What is the typical alcohol percentage for tinctures?</p>
+                <button onclick="checkAnswer(4, 'A', 2)">A. 40-60%</button>
+                <button onclick="checkAnswer(4, 'B', 2)">B. 70-90%</button>
+                <p id="result4" class="result"></p>
+                <p class="timer" id="timer4">Time Left: 60s</p>
+            </div>
+            <button id="continue4" class="continue-btn hidden" onclick="continueToNextModule(4)">Continue to Module 5</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback4" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(4)">Submit Feedback</button>
+                <p id="feedbackLog4"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 5 -->
+    <div id="page5" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(5)">
+            Module 5: Clinical Applications <span class="badge" id="badge5">Locked</span>
+        </div>
+        <div id="content5" class="content">
+            <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Clinical herbal medicine" class="module-image">
+            
+            <h3>Common Conditions and Herbal Protocols</h3>
+            <div class="herb-card">
+                <h4>Stress/Anxiety</h4>
+                <ul>
+                    <li><strong>Ashwagandha:</strong> Adaptogen (300-500mg standardized extract)</li>
+                    <li><strong>Passionflower:</strong> Nervine (2-4ml tincture 3x daily)</li>
+                    <li><strong>Lemon Balm:</strong> Calming (1-3 cups tea daily)</li>
+                </ul>
+            </div>
+            
+            <div class="herb-card">
+                <h4>Digestive Issues</h4>
+                <ul>
+                    <li><strong>Peppermint:</strong> IBS (0.2-0.4ml enteric-coated oil)</li>
+                    <li><strong>Ginger:</strong> Nausea (1-2g dried root)</li>
+                    <li><strong>Chamomile:</strong> Indigestion (3-4 cups tea daily)</li>
+                </ul>
+            </div>
+            
+            <div class="herb-card">
+                <h4>Immune Support</h4>
+                <ul>
+                    <li><strong>Echinacea:</strong> Prevention (2-3ml tincture 3x daily)</li>
+                    <li><strong>Elderberry:</strong> Viral infections (1Tbsp syrup 4x daily)</li>
+                    <li><strong>Astragalus:</strong> Long-term support (500mg capsule 2x daily)</li>
+                </ul>
+            </div>
+            
+            <h3>Case Study: Insomnia Protocol</h3>
+            <p>45-year-old female with sleep maintenance insomnia:</p>
+            <ol>
+                <li><strong>Valerian root:</strong> 300-600mg at bedtime (GABA modulation)</li>
+                <li><strong>Chamomile tea:</strong> 1 cup before bed (apigenin effects)</li>
+                <li><strong>Lavender oil:</strong> Aromatherapy (linalool content)</li>
+            </ol>
+            <p>Expected results: Improved sleep latency within 1 week, better sleep maintenance by week 3.</p>
+            
+            <iframe src="https://www.youtube.com/embed/4Wzjg6H9w6E" title="Herbal Protocols for Stress" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Design a 4-week herbal protocol for seasonal allergies using butterbur, nettle, and quercetin.</p>
+            
+            <p><a href="https://www.herbalgram.org/resources/expanded-commission-e/" class="resource-link">Herbal Monographs</a></p>
+            
+            <button onclick="startQuiz(5)">Take Quiz</button>
+            <div id="quiz5" class="quiz hidden">
+                <p>1. Which herb is commonly used for IBS?</p>
+                <button onclick="checkAnswer(5, 'A', 1)">A. Peppermint</button>
+                <button onclick="checkAnswer(5, 'B', 1)">B. Echinacea</button>
+                <p>2. What is the primary use of valerian root?</p>
+                <button onclick="checkAnswer(5, 'A', 2)">A. Sleep support</button>
+                <button onclick="checkAnswer(5, 'B', 2)">B. Pain relief</button>
+                <p id="result5" class="result"></p>
+                <p class="timer" id="timer5">Time Left: 60s</p>
+            </div>
+            <button id="continue5" class="continue-btn hidden" onclick="continueToNextModule(5)">Continue to Module 6</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback5" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(5)">Submit Feedback</button>
+                <p id="feedbackLog5"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 6 -->
+    <div id="page6" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(6)">
+            Module 6: Safety, Ethics, and Practice <span class="badge" id="badge6">Locked</span>
+        </div>
+        <div id="content6" class="content">
+            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Herbal safety" class="module-image">
+            
+            <h3>Safety Considerations</h3>
+            <div class="herb-card">
+                <h4>Contraindicated Herbs</h4>
+                <ul>
+                    <li><strong>Ephedra:</strong> Cardiovascular risks</li>
+                    <li><strong>Comfrey:</strong> Liver toxicity (pyrrolizidine alkaloids)</li>
+                    <li><strong>Kava:</strong> Liver damage risk</li>
+                </ul>
+            </div>
+            
+            <div class="herb-card">
+                <h4>Special Populations</h4>
+                <ul>
+                    <li><strong>Pregnancy:</strong> Avoid black cohosh, pennyroyal</li>
+                    <li><strong>Children:</strong> Adjust doses (Clark's rule: child dose = (age/(age+12)) × adult dose</li>
+                    <li><strong>Elderly:</strong> Monitor for herb-drug interactions</li>
+                </ul>
+            </div>
+            
+            <h3>Ethical Practice</h3>
+            <ul>
+                <li><strong>Scope of Practice:</strong> Know legal limitations in your region</li>
+                <li><strong>Informed Consent:</strong> Disclose potential risks/benefits</li>
+                <li><strong>Sustainability:</strong> Use ethically sourced herbs (United Plant Savers at-risk list)</li>
+            </ul>
+            
+            <h3>Starting an Herbal Practice</h3>
+            <ol>
+                <li>Obtain proper training/certification</li>
+                <li>Create standard intake forms</li>
+                <li>Develop apothecary with 20-30 core herbs</li>
+                <li>Establish referral network with MDs/NDs</li>
+                <li>Maintain continuing education</li>
+            </ol>
+            
+            <iframe src="https://www.youtube.com/embed/7y8tAMtQZ8I" title="Herbal Safety Guidelines" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Create a client intake form including medical history, current medications, and herbal experience.</p>
+            
+            <p><a href="https://www.americanherbalistsguild.com/" class="resource-link">Professional Herbalist Organizations</a></p>
+            
+            <button onclick="startQuiz(6)">Take Quiz</button>
+            <div id="quiz6" class="quiz hidden">
+                <p>1. Which herb is contraindicated in pregnancy?</p>
+                <button onclick="checkAnswer(6, 'A', 1)">A. Black cohosh</button>
+                <button onclick="checkAnswer(6, 'B', 1)">B. Chamomile</button>
+                <p>2. What organization tracks at-risk medicinal plants?</p>
+                <button onclick="checkAnswer(6, 'A', 2)">A. United Plant Savers</button>
+                <button onclick="checkAnswer(6, 'B', 2)">B. FDA</button>
+                <p id="result6" class="result"></p>
+                <p class="timer" id="timer6">Time Left: 60s</p>
+            </div>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback6" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(6)">Submit Feedback</button>
+                <p id="feedbackLog6"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration -->
+    <div class="celebration" id="celebration" style="display: none;">
+        <h2>Congratulations, <span id="celebrateName">Learner</span>!</h2>
+        <p>You've completed all 6 modules of Herbal Medicine Certification!</p>
+        <button onclick="shareSuccess()">Share Your Success</button>
+    </div>
+    <button id="celebrateBtn" onclick="showCelebration()" disabled>Celebrate Your Journey</button>
+
+    <script>
+        const totalModules = 6;
+        const correctAnswers = {
+            1: { 1: 'A', 2: 'A' },
+            2: { 1: 'A', 2: 'A' },
+            3: { 1: 'A', 2: 'A' },
+            4: { 1: 'A', 2: 'A' },
+            5: { 1: 'A', 2: 'A' },
+            6: { 1: 'A', 2: 'A' }
+        };
+        const badgeNames = {
+            1: "Herbal Historian",
+            2: "Tradition Scholar",
+            3: "Phytochemist",
+            4: "Medicine Maker",
+            5: "Clinical Herbalist",
+            6: "Ethical Practitioner"
+        };
+        let completedModules = 0;
+        let quizScores = {};
+        let totalScore = 0;
+        let timers = {};
+        let userName = localStorage.getItem('userName') || 'Learner';
+
+        function initializeProgress() {
+            completedModules = 0;
+            totalScore = 0;
+            document.getElementById('userName').innerText = userName;
+            for (let i = 1; i <= totalModules; i++) {
+                const status = localStorage.getItem(`quiz${i}`);
+                if (status === "completed") {
+                    completedModules++;
+                    totalScore += 2;
+                    document.getElementById(`badge${i}`).innerText = `${badgeNames[i]} ✔`;
+                    document.getElementById(`badge${i}`).classList.add("completed");
+                    document.getElementById(`page${i}`).querySelector('.module').classList.add("completed");
+                    unlockNextModule(i);
+                    document.getElementById(`continue${i}`).classList.remove("hidden");
+                } else {
+                    document.getElementById(`badge${i}`).innerText = i === 1 ? "Not Started" : "Locked";
+                }
+                const feedback = localStorage.getItem(`feedback${i}`);
+                if (feedback) document.getElementById(`feedbackLog${i}`).innerText = `Your Feedback: "${feedback}"`;
+            }
+            updateDashboard();
+            checkCompletion();
+        }
+
+        function unlockNextModule(currentModuleId) {
+            const nextModuleId = currentModuleId + 1;
+            if (nextModuleId <= totalModules) {
+                const nextModule = document.getElementById(`page${nextModuleId}`);
+                const nextButton = document.getElementById(`page${nextModuleId}Btn`);
+                nextModule.classList.remove("locked");
+                nextButton.disabled = false;
+                document.getElementById(`badge${nextModuleId}`).innerText = "Not Started";
+                console.log(`Unlocked Module ${nextModuleId}`);
+            }
+        }
+
+        function updateDashboard() {
+            document.getElementById("completedModules").innerText = completedModules;
+            document.getElementById("totalScore").innerText = totalScore;
+            const progress = (completedModules / totalModules) * 100;
+            document.getElementById("progress").style.width = `${progress}%`;
+        }
+
+        function checkCompletion() {
+            if (completedModules === totalModules) {
+                document.getElementById("celebrateBtn").disabled = false;
+            }
+        }
+
+        function toggleModule(moduleId) {
+            const content = document.getElementById(`content${moduleId}`);
+            content.style.display = content.style.display === "block" ? "none" : "block";
+        }
+
+        function startQuiz(moduleId) {
+            document.getElementById(`quiz${moduleId}`).classList.remove("hidden");
+            quizScores[moduleId] = { 1: false, 2: false };
+            startTimer(moduleId);
+        }
+
+        function startTimer(moduleId) {
+            let timeLeft = 60;
+            const timerElement = document.getElementById(`timer${moduleId}`);
+            timers[moduleId] = setInterval(() => {
+                timeLeft--;
+                timerElement.innerText = `Time Left: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timers[moduleId]);
+                    timerElement.innerText = "Time's Up!";
+                    document.querySelectorAll(`#quiz${moduleId} button`).forEach(btn => btn.disabled = true);
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(moduleId, answer, questionNum) {
+            const resultElement = document.getElementById(`result${moduleId}`);
+            if (answer === correctAnswers[moduleId][questionNum]) {
+                quizScores[moduleId][questionNum] = true;
+                totalScore++;
+                updateQuizResult(moduleId);
+            } else {
+                resultElement.innerHTML = `❌ Incorrect on Question ${questionNum}.`;
+                resultElement.style.color = "#dc3545";
+            }
+        }
+
+        function updateQuizResult(moduleId) {
+            const resultElement = document.getElementById(`result${moduleId}`);
+            const quizButtons = document.querySelectorAll(`#quiz${moduleId} button`);
+            const allCorrect = Object.values(quizScores[moduleId]).every(score => score);
+            if (allCorrect) {
+                resultElement.innerHTML = `✅ All Correct! Score: 2/2 - Badge: ${badgeNames[moduleId]}`;
+                resultElement.style.color = "#28a745";
+                localStorage.setItem(`quiz${moduleId}`, "completed");
+                document.getElementById(`badge${moduleId}`).innerText = `${badgeNames[moduleId]} ✔`;
+                document.getElementById(`badge${moduleId}`).classList.add("completed");
+                document.getElementById(`page${moduleId}`).querySelector('.module').classList.add("completed");
+                completedModules++;
+                updateDashboard();
+                unlockNextModule(moduleId);
+                document.getElementById(`continue${moduleId}`).classList.remove("hidden");
+                quizButtons.forEach(btn => btn.disabled = true);
+                clearInterval(timers[moduleId]);
+                document.getElementById(`timer${moduleId}`).innerText = "Quiz Completed!";
+                console.log(`Module ${moduleId} completed, continue button shown`);
+            } else {
+                resultElement.innerHTML = `✅ Correct so far. Score: ${Object.values(quizScores[moduleId]).filter(s => s).length}/2`;
+                resultElement.style.color = "#28a745";
+            }
+        }
+
+        function continueToNextModule(currentModuleId) {
+            const nextModuleId = currentModuleId + 1;
+            if (nextModuleId <= totalModules) {
+                showPage(nextModuleId);
+                toggleModule(nextModuleId);
+                window.scrollTo(0, 0);
+                console.log(`Navigated to Module ${nextModuleId} and scrolled to top`);
+            }
+        }
+
+        function submitFeedback(moduleId) {
+            const feedbackText = document.getElementById(`feedback${moduleId}`).value.trim();
+            if (feedbackText) {
+                localStorage.setItem(`feedback${moduleId}`, feedbackText);
+                document.getElementById(`feedbackLog${moduleId}`).innerText = `Your Feedback: "${feedbackText}"`;
+                alert("Thank you for your feedback!");
+                document.getElementById(`feedback${moduleId}`).value = "";
+            }
+        }
+
+        function showCelebration() {
+            document.getElementById('celebrateName').innerText = userName;
+            document.getElementById('celebration').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function shareSuccess() {
+            alert("Congratulations on completing the Herbal Medicine course! Share your success (simulated).");
+        }
+
+        function showPage(pageNumber) {
+            document.querySelectorAll(".module-container").forEach((page, index) => {
+                page.classList.toggle("hidden", index + 1 !== pageNumber);
+            });
+            window.scrollTo(0, 0);
+            console.log(`Showing page ${pageNumber} and scrolled to top`);
+        }
+
+        function resetProgress() {
+            if (confirm("Reset all progress?")) {
+                localStorage.clear();
+                userName = prompt("Enter your name:", "Learner") || "Learner";
+                localStorage.setItem('userName', userName);
+                location.reload();
+            }
+        }
+
+        window.onload = () => {
+            if (!localStorage.getItem('userName')) {
+                userName = prompt("Welcome to Herbal Medicine! Enter your name:", "Learner") || "Learner";
+                localStorage.setItem('userName', userName);
+            }
+            initializeProgress();
+            showPage(1);
+        };
+    </script>
+
+</body>
+</html>
