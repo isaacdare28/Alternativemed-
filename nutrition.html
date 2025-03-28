@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate in Nutrition & Alternative Medicine LMS</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f9f5f0;
+            color: #333;
+        }
+        h1 {
+            color: #8b4513;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .module {
+            border: 1px solid #d2b48c;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            background: #fffaf0;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .module:hover {
+            background: #f5e7d5;
+            transform: translateY(-2px);
+        }
+        .module.completed {
+            background: #f0e6cc;
+            border-color: #8b4513;
+        }
+        .content {
+            display: none;
+            padding: 15px;
+            border-top: 1px solid #d2b48c;
+            background: #fffaf0;
+            border-radius: 0 0 8px 8px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #8b4513;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #6b3410;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .hidden {
+            display: none;
+        }
+        .quiz {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9f5f0;
+            border-radius: 8px;
+            border: 1px solid #d2b48c;
+        }
+        .quiz button {
+            margin: 5px;
+            background: #a0522d;
+        }
+        .quiz button:hover {
+            background: #8b4513;
+        }
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            background: #f0e6cc;
+        }
+        #celebrateBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 16px;
+            background: #8b4513;
+        }
+        .progress-bar {
+            width: 100%;
+            background: #e0d5c8;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress {
+            height: 20px;
+            background: #8b4513;
+            border-radius: 5px;
+            width: 0;
+            transition: width 0.5s ease;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #d2b48c;
+            color: #333;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .badge.completed {
+            background: #8b4513;
+            color: #fff;
+        }
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .pagination button {
+            margin: 0 5px;
+            padding: 8px 12px;
+            background: #a0522d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background: #8b4513;
+        }
+        .pagination button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .locked {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .continue-btn {
+            background: #556b2f;
+            margin-top: 20px;
+        }
+        .continue-btn:hover {
+            background: #3d4d23;
+        }
+        .module-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        iframe {
+            width: 100%;
+            height: 315px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #fffaf0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #d2b48c;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #8b4513;
+            color: white;
+        }
+        .resource-link {
+            color: #8b4513;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+        .dashboard {
+            margin: 20px 0;
+            padding: 20px;
+            background: #fffaf0;
+            border: 1px solid #d2b48c;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .timer {
+            font-size: 14px;
+            color: #dc3545;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .feedback {
+            margin-top: 20px;
+            border-top: 1px solid #d2b48c;
+            padding-top: 15px;
+        }
+        .feedback textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #d2b48c;
+            margin-top: 10px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .feedback button {
+            background: #556b2f;
+        }
+        .feedback button:hover {
+            background: #3d4d23;
+        }
+        .celebration {
+            margin: 20px 0;
+            padding: 30px;
+            background: #fffaf0;
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
+        }
+        .nutrition-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #8b4513;
+        }
+        .nutrition-card h4 {
+            color: #8b4513;
+            margin-top: 0;
+        }
+        .healing-food {
+            background: #f5f0e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #a0522d;
+        }
+        .healing-food h4 {
+            color: #6b3410;
+            margin-top: 0;
+        }
+        .benefits-list {
+            columns: 2;
+            column-gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .benefits-list {
+                columns: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Certificate in Nutrition & Alternative Medicine</h1>
+    <p style="text-align: center;">Click on a module to expand and start learning.</p>
+
+    <!-- Progress Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <h2>Your Progress, <span id="userName">Student</span></h2>
+        <p>Completed Modules: <span id="completedModules">0</span> / 6</p>
+        <p>Total Quiz Score: <span id="totalScore">0</span> / 12</p>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <button onclick="resetProgress()">Reset Progress</button>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <button onclick="showPage(1)">Module 1</button>
+        <button onclick="showPage(2)" id="page2Btn" disabled>Module 2</button>
+        <button onclick="showPage(3)" id="page3Btn" disabled>Module 3</button>
+        <button onclick="showPage(4)" id="page4Btn" disabled>Module 4</button>
+        <button onclick="showPage(5)" id="page5Btn" disabled>Module 5</button>
+        <button onclick="showPage(6)" id="page6Btn" disabled>Module 6</button>
+    </div>
+
+    <!-- Module 1 -->
+    <div id="page1" class="module-container">
+        <div class="module" onclick="toggleModule(1)">
+            Module 1: Foundations of Nutritional Healing <span class="badge" id="badge1">Not Started</span>
+        </div>
+        <div id="content1" class="content">
+            <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Nutritional healing foods" class="module-image">
+            
+            <h3>Historical Perspectives</h3>
+            <p>Nutritional therapy dates back to Hippocrates (460-370 BCE) who said "Let food be thy medicine." Traditional systems like Ayurveda (5000 BCE) and TCM (3000 BCE) developed sophisticated food-based healing protocols.</p>
+            
+            <h3>Core Principles</h3>
+            <ul>
+                <li><strong>Bioindividuality:</strong> No one-size-fits-all diet</li>
+                <li><strong>Nutrient Density:</strong> Maximizing micronutrients per calorie</li>
+                <li><strong>Digestive Health:</strong> Gut as foundation of wellness</li>
+                <li><strong>Detoxification:</strong> Supporting the body's elimination pathways</li>
+            </ul>
+            
+            <h3>Modern Integrative Approaches</h3>
+            <p>Combining traditional wisdom with evidence-based nutrition science. Research confirms food's role in gene expression (nutrigenomics) and microbiome balance.</p>
+            
+            <iframe src="https://www.youtube.com/embed/7pKrVB5f2W0" title="Food as Medicine" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Keep a 3-day food journal noting how different foods affect your energy, digestion, and mood.</p>
+            
+            <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5852829/" class="resource-link">Research: Food as Medicine</a></p>
+            
+            <button onclick="startQuiz(1)">Take Quiz</button>
+            <div id="quiz1" class="quiz hidden">
+                <p>1. Which ancient physician said "Let food be thy medicine"?</p>
+                <button onclick="checkAnswer(1, 'A', 1)">A. Hippocrates</button>
+                <button onclick="checkAnswer(1, 'B', 1)">B. Galen</button>
+                <p>2. What principle emphasizes personalized nutrition?</p>
+                <button onclick="checkAnswer(1, 'A', 2)">A. Bioindividuality</button>
+                <button onclick="checkAnswer(1, 'B', 2)">B. Caloric restriction</button>
+                <p id="result1" class="result"></p>
+                <p class="timer" id="timer1">Time Left: 60s</p>
+            </div>
+            <button id="continue1" class="continue-btn hidden" onclick="continueToNextModule(1)">Continue to Module 2</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback1" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(1)">Submit Feedback</button>
+                <p id="feedbackLog1"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 2 -->
+    <div id="page2" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(2)">
+            Module 2: Traditional Healing Diets <span class="badge" id="badge2">Locked</span>
+        </div>
+        <div id="content2" class="content">
+            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Traditional diets" class="module-image">
+            
+            <h3>Ayurvedic Nutrition</h3>
+            <div class="nutrition-card">
+                <h4>Dosha-Based Eating</h4>
+                <ul>
+                    <li><strong>Vata:</strong> Warm, moist, grounding foods (soups, stews)</li>
+                    <li><strong>Pitta:</strong> Cooling, bitter foods (cucumber, coconut)</li>
+                    <li><strong>Kapha:</strong> Light, spicy foods (beans, bitter greens)</li>
+                </ul>
+            </div>
+            
+            <h3>Traditional Chinese Medicine Nutrition</h3>
+            <div class="nutrition-card">
+                <h4>Food Energetics</h4>
+                <ul>
+                    <li><strong>Heating foods:</strong> Ginger, lamb, cinnamon (for cold conditions)</li>
+                    <li><strong>Cooling foods:</strong> Mint, cucumber, tofu (for heat conditions)</li>
+                    <li><strong>Dampness-reducing:</strong> Aduki beans, barley, pumpkin</li>
+                </ul>
+            </div>
+            
+            <h3>Mediterranean Diet</h3>
+            <div class="nutrition-card">
+                <h4>Key Components</h4>
+                <ul>
+                    <li>Olive oil as primary fat</li>
+                    <li>Abundant vegetables and legumes</li>
+                    <li>Moderate fish and dairy</li>
+                    <li>Red wine in moderation</li>
+                </ul>
+            </div>
+            
+            <h3>Comparative Analysis</h3>
+            <table>
+                <tr><th>System</th><th>Focus</th><th>Sample Meal</th></tr>
+                <tr><td>Ayurveda</td><td>Dosha balance</td><td>Kitchari (mung + rice + ghee)</td></tr>
+                <tr><td>TCM</td><td>Qi/Yang balance</td><td>Congee with ginger</td></tr>
+                <tr><td>Mediterranean</td><td>Cardiovascular health</td><td>Grilled fish + olive oil + greens</td></tr>
+            </table>
+            
+            <iframe src="https://www.youtube.com/embed/3s-e1e1Z7Wk" title="Healing Diets Compared" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Prepare one meal following principles from a traditional system, noting its effects.</p>
+            
+            <p><a href="https://www.ayurveda.com/resources/articles/ayurvedic-nutrition" class="resource-link">Ayurvedic Nutrition Guide</a></p>
+            
+            <button onclick="startQuiz(2)">Take Quiz</button>
+            <div id="quiz2" class="quiz hidden">
+                <p>1. Which foods balance Vata dosha?</p>
+                <button onclick="checkAnswer(2, 'A', 1)">A. Warm, moist foods</button>
+                <button onclick="checkAnswer(2, 'B', 1)">B. Cold, raw foods</button>
+                <p>2. What is a key component of Mediterranean diet?</p>
+                <button onclick="checkAnswer(2, 'A', 2)">A. Olive oil</button>
+                <button onclick="checkAnswer(2, 'B', 2)">B. Coconut oil</button>
+                <p id="result2" class="result"></p>
+                <p class="timer" id="timer2">Time Left: 60s</p>
+            </div>
+            <button id="continue2" class="continue-btn hidden" onclick="continueToNextModule(2)">Continue to Module 3</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback2" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(2)">Submit Feedback</button>
+                <p id="feedbackLog2"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 3 -->
+    <div id="page3" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(3)">
+            Module 3: Functional Foods & Herbs <span class="badge" id="badge3">Locked</span>
+        </div>
+        <div id="content3" class="content">
+            <img src="https://images.unsplash.com/photo-1535914254981-b5012eebbd15?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Functional foods" class="module-image">
+            
+            <h3>Superfoods & Their Uses</h3>
+            <div class="healing-food">
+                <h4>Turmeric (Curcuma longa)</h4>
+                <p><strong>Active Compound:</strong> Curcumin<br>
+                <strong>Benefits:</strong> Anti-inflammatory (comparable to ibuprofen in arthritis studies)<br>
+                <strong>Use:</strong> 1 tsp daily with black pepper to enhance absorption</p>
+            </div>
+            
+            <div class="healing-food">
+                <h4>Fermented Foods</h4>
+                <p><strong>Examples:</strong> Sauerkraut, kimchi, kefir<br>
+                <strong>Benefits:</strong> Probiotics improve gut microbiome diversity<br>
+                <strong>Use:</strong> 1-2 tablespoons daily with meals</p>
+            </div>
+            
+            <h3>Healing Herbs in Nutrition</h3>
+            <table>
+                <tr><th>Herb</th><th>Use</th><th>Preparation</th></tr>
+                <tr><td>Ginger</td><td>Digestive aid</td><td>Tea, fresh grated</td></tr>
+                <tr><td>Garlic</td><td>Antimicrobial</td><td>Raw crushed</td></tr>
+                <tr><td>Cinnamon</td><td>Blood sugar balance</td><td>1/2 tsp in meals</td></tr>
+            </table>
+            
+            <h3>Food-As-Medicine Protocols</h3>
+            <div class="nutrition-card">
+                <h4>Anti-Inflammatory Protocol</h4>
+                <ul>
+                    <li>Omega-3 rich foods (fatty fish, flaxseeds)</li>
+                    <li>Colorful berries (anthocyanins)</li>
+                    <li>Green tea (EGCG)</li>
+                    <li>Olive oil (oleocanthal)</li>
+                </ul>
+            </div>
+            
+            <iframe src="https://www.youtube.com/embed/KMV6rKZja_s" title="Functional Foods Explained" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Incorporate one new functional food into your diet for 3 days, noting effects.</p>
+            
+            <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7146109/" class="resource-link">Research: Curcumin Benefits</a></p>
+            
+            <button onclick="startQuiz(3)">Take Quiz</button>
+            <div id="quiz3" class="quiz hidden">
+                <p>1. What enhances turmeric absorption?</p>
+                <button onclick="checkAnswer(3, 'A', 1)">A. Black pepper</button>
+                <button onclick="checkAnswer(3, 'B', 1)">B. Lemon juice</button>
+                <p>2. Which is NOT a fermented food?</p>
+                <button onclick="checkAnswer(3, 'A', 2)">A. Kimchi</button>
+                <button onclick="checkAnswer(3, 'B', 2)">B. Apple slices</button>
+                <p id="result3" class="result"></p>
+                <p class="timer" id="timer3">Time Left: 60s</p>
+            </div>
+            <button id="continue3" class="continue-btn hidden" onclick="continueToNextModule(3)">Continue to Module 4</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback3" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(3)">Submit Feedback</button>
+                <p id="feedbackLog3"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 4 -->
+    <div id="page4" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(4)">
+            Module 4: Gut Health & Microbiome <span class="badge" id="badge4">Locked</span>
+        </div>
+        <div id="content4" class="content">
+            <img src="https://images.unsplash.com/photo-1584473457406-6240486418e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Gut health foods" class="module-image">
+            
+            <h3>Gut-Brain Connection</h3>
+            <p>The enteric nervous system contains 500 million neurons communicating with the brain via the vagus nerve. 90% of serotonin is produced in the gut.</p>
+            
+            <h3>Healing the Gut</h3>
+            <div class="nutrition-card">
+                <h4>4R Protocol</h4>
+                <ol>
+                    <li><strong>Remove:</strong> Eliminate irritants (gluten, dairy if sensitive)</li>
+                    <li><strong>Replace:</strong> Add digestive enzymes if needed</li>
+                    <li><strong>Reinoculate:</strong> Probiotics and prebiotic fibers</li>
+                    <li><strong>Repair:</strong> Nutrients like glutamine, zinc, omega-3s</li>
+                </ol>
+            </div>
+            
+            <h3>Microbiome Superfoods</h3>
+            <div class="healing-food">
+                <h4>Prebiotic Foods</h4>
+                <p>Garlic, onions, leeks, asparagus, bananas (green), chicory root</p>
+            </div>
+            
+            <div class="healing-food">
+                <h4>Probiotic Foods</h4>
+                <p>Sauerkraut, kimchi, miso, tempeh, kefir, yogurt (unsweetened)</p>
+            </div>
+            
+            <h3>Leaky Gut Protocol</h3>
+            <ul>
+                <li><strong>Bone broth:</strong> Provides collagen/gelatin</li>
+                <li><strong>L-glutamine:</strong> 5g daily to repair tight junctions</li>
+                <li><strong>Quercetin-rich foods:</strong> Apples, capers, onions</li>
+                <li><strong>Omega-3s:</strong> Reduce intestinal inflammation</li>
+            </ul>
+            
+            <iframe src="https://www.youtube.com/embed/1sISguPDlhY" title="Gut Health Explained" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Add one probiotic and one prebiotic food to your daily diet for 3 days.</p>
+            
+            <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5641835/" class="resource-link">Research: Gut Microbiome & Health</a></p>
+            
+            <button onclick="startQuiz(4)">Take Quiz</button>
+            <div id="quiz4" class="quiz hidden">
+                <p>1. Where is most serotonin produced?</p>
+                <button onclick="checkAnswer(4, 'A', 1)">A. Gut</button>
+                <button onclick="checkAnswer(4, 'B', 1)">B. Brain</button>
+                <p>2. Which is NOT a prebiotic food?</p>
+                <button onclick="checkAnswer(4, 'A', 2)">A. Garlic</button>
+                <button onclick="checkAnswer(4, 'B', 2)">B. White bread</button>
+                <p id="result4" class="result"></p>
+                <p class="timer" id="timer4">Time Left: 60s</p>
+            </div>
+            <button id="continue4" class="continue-btn hidden" onclick="continueToNextModule(4)">Continue to Module 5</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback4" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(4)">Submit Feedback</button>
+                <p id="feedbackLog4"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 5 -->
+    <div id="page5" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(5)">
+            Module 5: Detoxification & Cleansing <span class="badge" id="badge5">Locked</span>
+        </div>
+        <div id="content5" class="content">
+            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Detox foods" class="module-image">
+            
+            <h3>Body's Detox Pathways</h3>
+            <ul>
+                <li><strong>Liver:</strong> Phase I (activation) and Phase II (conjugation)</li>
+                <li><strong>Kidneys:</strong> Filter blood 60 times/day</li>
+                <li><strong>Skin:</strong> Sweat eliminates heavy metals</li>
+                <li><strong>Lungs:</strong> Exhale volatile compounds</li>
+                <li><strong>Colon:</strong> Eliminates waste products</li>
+            </ul>
+            
+            <h3>Foods That Support Detox</h3>
+            <div class="healing-food">
+                <h4>Liver Support</h4>
+                <p>Cruciferous vegetables (sulforaphane), beets (betaine), dandelion greens</p>
+            </div>
+            
+            <div class="healing-food">
+                <h4>Heavy Metal Detox</h4>
+                <p>Cilantro (mobilizes metals), chlorella (binds metals), garlic (sulfur compounds)</p>
+            </div>
+            
+            <h3>Safe Detox Protocols</h3>
+            <div class="nutrition-card">
+                <h4>7-Day Gentle Detox</h4>
+                <ul>
+                    <li><strong>Eliminate:</strong> Processed foods, alcohol, caffeine</li>
+                    <li><strong>Emphasize:</strong> 8-10 vegetable servings/day</li>
+                    <li><strong>Hydration:</strong> 2L water + herbal teas daily</li>
+                    <li><strong>Support:</strong> Milk thistle for liver, Epsom salt baths</li>
+                </ul>
+            </div>
+            
+            <h3>Detox Symptoms & Management</h3>
+            <table>
+                <tr><th>Symptom</th><th>Cause</th><th>Remedy</th></tr>
+                <tr><td>Headache</td><td>Toxin release</td><td>Increase water, slow detox</td></tr>
+                <tr><td>Fatigue</td><td>Energy for detox</td><td>Rest, electrolytes</td></tr>
+                <tr><td>Skin breakout</td><td>Elimination</td><td>Dry brushing, baths</td></tr>
+            </table>
+            
+            <iframe src="https://www.youtube.com/embed/K4Ze-Sp6aUE" title="Safe Detox Practices" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Try a 1-day vegetable-based cleanse with 3 meals of vegetable soups/smoothies.</p>
+            
+            <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4488002/" class="resource-link">Research: Cruciferous Vegetables & Detox</a></p>
+            
+            <button onclick="startQuiz(5)">Take Quiz</button>
+            <div id="quiz5" class="quiz hidden">
+                <p>1. Which vegetable supports liver detox?</p>
+                <button onclick="checkAnswer(5, 'A', 1)">A. Broccoli</button>
+                <button onclick="checkAnswer(5, 'B', 1)">B. Potatoes</button>
+                <p>2. What helps bind heavy metals?</p>
+                <button onclick="checkAnswer(5, 'A', 2)">A. Chlorella</button>
+                <button onclick="checkAnswer(5, 'B', 2)">B. Sugar</button>
+                <p id="result5" class="result"></p>
+                <p class="timer" id="timer5">Time Left: 60s</p>
+            </div>
+            <button id="continue5" class="continue-btn hidden" onclick="continueToNextModule(5)">Continue to Module 6</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback5" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(5)">Submit Feedback</button>
+                <p id="feedbackLog5"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 6 -->
+    <div id="page6" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(6)">
+            Module 6: Clinical Applications <span class="badge" id="badge6">Locked</span>
+        </div>
+        <div id="content6" class="content">
+            <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Clinical nutrition" class="module-image">
+            
+            <h3>Condition-Specific Protocols</h3>
+            <div class="nutrition-card">
+                <h4>Autoimmune Conditions</h4>
+                <ul>
+                    <li>Anti-inflammatory diet (remove gluten, dairy)</li>
+                    <li>Omega-3 rich foods (wild salmon, flaxseeds)</li>
+                    <li>Vitamin D optimization (fatty fish, sunlight)</li>
+                    <li>Gut healing protocol</li>
+                </ul>
+            </div>
+            
+            <div class="nutrition-card">
+                <h4>Blood Sugar Imbalance</h4>
+                <ul>
+                    <li>Low glycemic load diet</li>
+                    <li>Cinnamon, fenugreek, bitter melon</li>
+                    <li>Chromium-rich foods (broccoli, nuts)</li>
+                    <li>Protein with each meal</li>
+                </ul>
+            </div>
+            
+            <h3>Case Study: IBS Management</h3>
+            <p><strong>Client:</strong> 35F with bloating and alternating constipation/diarrhea<br>
+            <strong>Protocol:</strong><br>
+            1) Low-FODMAP diet for 4 weeks<br>
+            2) Peppermint tea for spasms<br>
+            3) L-glutamine for gut lining<br>
+            4) Stress reduction techniques<br>
+            <strong>Outcome:</strong> 75% symptom reduction at 6 weeks</p>
+            
+            <h3>Integrative Nutrition Counseling</h3>
+            <ol>
+                <li>Comprehensive health history</li>
+                <li>Food-mood-symptom diary analysis</li>
+                <li>Personalized elimination diet if needed</li>
+                <li>Gradual reintroduction protocol</li>
+                <li>Maintenance plan with flexibility</li>
+            </ol>
+            
+            <iframe src="https://www.youtube.com/embed/3XGIXi2mry4" title="Nutrition for Autoimmunity" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Design a 3-day meal plan for someone with fatigue and brain fog.</p>
+            
+            <p><a href="https://www.integrativepro.com/articles/the-role-of-nutrition-in-integrative-medicine" class="resource-link">Integrative Nutrition Resources</a></p>
+            
+            <button onclick="startQuiz(6)">Take Quiz</button>
+            <div id="quiz6" class="quiz hidden">
+                <p>1. Which diet helps IBS symptoms?</p>
+                <button onclick="checkAnswer(6, 'A', 1)">A. Low-FODMAP</button>
+                <button onclick="checkAnswer(6, 'B', 1)">B. High-carb</button>
+                <p>2. What helps blood sugar balance?</p>
+                <button onclick="checkAnswer(6, 'A', 2)">A. Cinnamon</button>
+                <button onclick="checkAnswer(6, 'B', 2)">B. White rice</button>
+                <p id="result6" class="result"></p>
+                <p class="timer" id="timer6">Time Left: 60s</p>
+            </div>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback6" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(6)">Submit Feedback</button>
+                <p id="feedbackLog6"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration -->
+    <div class="celebration" id="celebration" style="display: none;">
+        <h2>Congratulations, <span id="celebrateName">Nutritionist</span>!</h2>
+        <p>You've completed all 6 modules of Nutrition in Alternative Medicine Certification!</p>
+        <p>You're now equipped to integrate traditional wisdom with modern nutritional science.</p>
+        <button onclick="shareSuccess()">Share Your Achievement</button>
+    </div>
+    <button id="celebrateBtn" onclick="showCelebration()" disabled>Complete Your Journey</button>
+
+    <script>
+        const totalModules = 6;
+        const correctAnswers = {
+            1: { 1: 'A', 2: 'A' },
+            2: { 1: 'A', 2: 'A' },
+            3: { 1: 'A', 2: 'B' },
+            4: { 1: 'A', 2: 'B' },
+            5: { 1: 'A', 2: 'A' },
+            6: { 1: 'A', 2: 'A' }
+        };
+        const badgeNames = {
+            1: "Nutrition Philosopher",
+            2: "Traditional Diet Expert",
+            3: "Functional Food Specialist",
+            4: "Gut Health Consultant",
+            5: "Detox Advisor",
+            6: "Clinical Nutritionist"
+        };
+        let completedModules = 0;
+        let quizScores = {};
+        let totalScore = 0;
+        let timers = {};
+        let userName = localStorage.getItem('userName') || 'Nutritionist';
+
+        function initializeProgress() {
+            completedModules = 0;
+            totalScore = 0;
+            document.getElementById('userName').innerText = userName;
+            for (let i = 1; i <= totalModules; i++) {
+                const status = localStorage.getItem(`quiz${i}`);
+                if (status === "completed") {
+                    completedModules++;
+                    totalScore += 2;
+                    document.getElementById(`badge${i}`).innerText = `${badgeNames[i]} ✔`;
+                    document.getElementById(`badge${i}`).classList.add("completed");
+                    document.getElementById(`page${i}`).querySelector('.module').classList.add("completed");
+                    unlockNextModule(i);
+                    document.getElementById(`continue${i}`).classList.remove("hidden");
+                } else {
+                    document.getElementById(`badge${i}`).innerText = i === 1 ? "Not Started" : "Locked";
+                }
+                const feedback = localStorage.getItem(`feedback${i}`);
+                if (feedback) document.getElementById(`feedbackLog${i}`).innerText = `Your Feedback: "${feedback}"`;
+            }
+            updateDashboard();
+            checkCompletion();
+        }
+
+        function unlockNextModule(currentModuleId) {
+            const nextModuleId = currentModuleId + 1;
+            if (nextModuleId <= totalModules) {
+                const nextModule = document.getElementById(`page${nextModuleId}`);
+                const nextButton = document.getElementById(`page${nextModuleId}Btn`);
+                nextModule.classList.remove("locked");
+                nextButton.disabled = false;
+                document.getElementById(`badge${nextModuleId}`).innerText = "Not Started";
+                console.log(`Unlocked Module ${nextModuleId}`);
+            }
+        }
+
+        function updateDashboard() {
+            document.getElementById("completedModules").innerText = completedModules;
+            document.getElementById("totalScore").innerText = totalScore;
+            const progress = (completedModules / totalModules) * 100;
+            document.getElementById("progress").style.width = `${progress}%`;
+        }
+
+        function checkCompletion() {
+            if (completedModules === totalModules) {
+                document.getElementById("celebrateBtn").disabled = false;
+            }
+        }
+
+        function toggleModule(moduleId) {
+            const content = document.getElementById(`content${moduleId}`);
+            content.style.display = content.style.display === "block" ? "none" : "block";
+        }
+
+        function startQuiz(moduleId) {
+            document.getElementById(`quiz${moduleId}`).classList.remove("hidden");
+            quizScores[moduleId] = { 1: false, 2: false };
+            startTimer(moduleId);
+        }
+
+        function startTimer(moduleId) {
+            let timeLeft = 60;
+            const timerElement = document.getElementById(`timer${moduleId}`);
+            timers[moduleId] = setInterval(() => {
+                timeLeft--;
+                timerElement.innerText = `Time Left: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timers[moduleId]);
+                    timerElement.innerText = "Time's Up!";
+                    document.querySelectorAll(`#quiz${moduleId} button`).forEach(btn => btn.disabled = true);
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(moduleId, answer, questionNum) {
+            const resultElement = document.getElementById(`result${moduleId}`);
+            if (answer === correctAnswers[moduleId][questionNum]) {
+                quizScores[moduleId][questionNum] = true;
+                totalScore++;
+                updateQuizResult(moduleId);
+            } else {
+                resultElement.innerHTML = `❌ Incorrect on Question ${questionNum}.`;
+                resultElement.style.color = "#dc3545";
+            }
+        }
+
+        function updateQuizResult(moduleId) {
+            const resultElement = document.getElementById(`result${moduleId}`);
+            const quizButtons = document.querySelectorAll(`#quiz${moduleId} button`);
+            const allCorrect = Object.values(quizScores[moduleId]).every(score => score);
+            if (allCorrect) {
+                resultElement.innerHTML = `✅ All Correct! Score: 2/2 - Badge: ${badgeNames[moduleId]}`;
+                resultElement.style.color = "#8b4513";
+                localStorage.setItem(`quiz${moduleId}`, "completed");
+                document.getElementById(`badge${moduleId}`).innerText = `${badgeNames[moduleId]} ✔`;
+                document.getElementById(`badge${moduleId}`).classList.add("completed");
+                document.getElementById(`page${moduleId}`).querySelector('.module').classList.add("completed");
+                completedModules++;
+                updateDashboard();
+                unlockNextModule(moduleId);
+                document.getElementById(`continue${moduleId}`).classList.remove("hidden");
+                quizButtons.forEach(btn => btn.disabled = true);
+                clearInterval(timers[moduleId]);
+                document.getElementById(`timer${moduleId}`).innerText = "Quiz Completed!";
+                console.log(`Module ${moduleId} completed, continue button shown`);
+            } else {
+                resultElement.innerHTML = `✅ Correct so far. Score: ${Object.values(quizScores[moduleId]).filter(s => s).length}/2`;
+                resultElement.style.color = "#8b4513";
+            }
+        }
+
+        function continueToNextModule(currentModuleId) {
+            const nextModuleId = currentModuleId + 1;
+            if (nextModuleId <= totalModules) {
+                showPage(nextModuleId);
+                toggleModule(nextModuleId);
+                window.scrollTo(0, 0);
+                console.log(`Navigated to Module ${nextModuleId} and scrolled to top`);
+            }
+        }
+
+        function submitFeedback(moduleId) {
+            const feedbackText = document.getElementById(`feedback${moduleId}`).value.trim();
+            if (feedbackText) {
+                localStorage.setItem(`feedback${moduleId}`, feedbackText);
+                document.getElementById(`feedbackLog${moduleId}`).innerText = `Your Feedback: "${feedbackText}"`;
+                alert("Thank you for your feedback!");
+                document.getElementById(`feedback${moduleId}`).value = "";
+            }
+        }
+
+        function showCelebration() {
+            document.getElementById('celebrateName').innerText = userName;
+            document.getElementById('celebration').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function shareSuccess() {
+            alert("Share your nutrition certification on social media (simulated)!");
+        }
+
+        function showPage(pageNumber) {
+            document.querySelectorAll(".module-container").forEach((page, index) => {
+                page.classList.toggle("hidden", index + 1 !== pageNumber);
+            });
+            window.scrollTo(0, 0);
+            console.log(`Showing page ${pageNumber} and scrolled to top`);
+        }
+
+        function resetProgress() {
+            if (confirm("Reset all progress?")) {
+                localStorage.clear();
+                userName = prompt("Enter your name:", "Nutritionist") || "Nutritionist";
+                localStorage.setItem('userName', userName);
+                location.reload();
+            }
+        }
+
+        window.onload = () => {
+            if (!localStorage.getItem('userName')) {
+                userName = prompt("Welcome to Nutrition in Alternative Medicine! Enter your name:", "Nutritionist") || "Nutritionist";
+                localStorage.setItem('userName', userName);
+            }
+            initializeProgress();
+            showPage(1);
+        };
+    </script>
+
+</body>
+</html>
