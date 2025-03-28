@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate in Yoga & Meditation LMS</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #4a6fa5;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .module {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            background: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .module:hover {
+            background: #f0f7ff;
+            transform: translateY(-2px);
+        }
+        .module.completed {
+            background: #e6f3ff;
+            border-color: #4a6fa5;
+        }
+        .content {
+            display: none;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background: #fff;
+            border-radius: 0 0 8px 8px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #4a6fa5;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #3a5a80;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .hidden {
+            display: none;
+        }
+        .quiz {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .quiz button {
+            margin: 5px;
+            background: #6a8fc7;
+        }
+        .quiz button:hover {
+            background: #5a7fb7;
+        }
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #celebrateBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 16px;
+            background: #4a6fa5;
+        }
+        .progress-bar {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress {
+            height: 20px;
+            background: #4a6fa5;
+            border-radius: 5px;
+            width: 0;
+            transition: width 0.5s ease;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #ffc107;
+            color: #333;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .badge.completed {
+            background: #4a6fa5;
+            color: #fff;
+        }
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .pagination button {
+            margin: 0 5px;
+            padding: 8px 12px;
+            background: #6a8fc7;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background: #5a7fb7;
+        }
+        .pagination button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .locked {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .continue-btn {
+            background: #5cb85c;
+            margin-top: 20px;
+        }
+        .continue-btn:hover {
+            background: #4cae4c;
+        }
+        .module-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        iframe {
+            width: 100%;
+            height: 315px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #4a6fa5;
+            color: white;
+        }
+        .resource-link {
+            color: #4a6fa5;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+        .dashboard {
+            margin: 20px 0;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .timer {
+            font-size: 14px;
+            color: #dc3545;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .feedback {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        .feedback textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .feedback button {
+            background: #5cb85c;
+        }
+        .feedback button:hover {
+            background: #4cae4c;
+        }
+        .celebration {
+            margin: 20px 0;
+            padding: 30px;
+            background: #fff;
+            border: 2px solid #4a6fa5;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(74, 111, 165, 0.2);
+        }
+        .pose-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #4a6fa5;
+        }
+        .pose-card h4 {
+            color: #4a6fa5;
+            margin-top: 0;
+        }
+        .meditation-technique {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #6a8fc7;
+        }
+        .meditation-technique h4 {
+            color: #3a5a80;
+            margin-top: 0;
+        }
+        .benefits-list {
+            columns: 2;
+            column-gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .benefits-list {
+                columns: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Certificate in Yoga & Meditation</h1>
+    <p style="text-align: center;">Click on a module to expand and start your journey.</p>
+
+    <!-- Progress Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <h2>Your Progress, <span id="userName">Yogi</span></h2>
+        <p>Completed Modules: <span id="completedModules">0</span> / 6</p>
+        <p>Total Quiz Score: <span id="totalScore">0</span> / 12</p>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <button onclick="resetProgress()">Reset Progress</button>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <button onclick="showPage(1)">Module 1</button>
+        <button onclick="showPage(2)" id="page2Btn" disabled>Module 2</button>
+        <button onclick="showPage(3)" id="page3Btn" disabled>Module 3</button>
+        <button onclick="showPage(4)" id="page4Btn" disabled>Module 4</button>
+        <button onclick="showPage(5)" id="page5Btn" disabled>Module 5</button>
+        <button onclick="showPage(6)" id="page6Btn" disabled>Module 6</button>
+    </div>
+
+    <!-- Module 1 -->
+    <div id="page1" class="module-container">
+        <div class="module" onclick="toggleModule(1)">
+            Module 1: Foundations of Yoga <span class="badge" id="badge1">Not Started</span>
+        </div>
+        <div id="content1" class="content">
+            <img src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Ancient yoga origins" class="module-image">
+            
+            <h3>Historical Roots</h3>
+            <p>Yoga originated over 5,000 years ago in the Indus-Sarasvati civilization, with the earliest mentions in the Rig Veda. The foundational text, Patanjali's Yoga Sutras (400 CE), systematized yoga into the 8 Limbs.</p>
+            
+            <h3>Philosophical Framework</h3>
+            <ul>
+                <li><strong>8 Limbs of Yoga:</strong> Yamas, Niyamas, Asana, Pranayama, Pratyahara, Dharana, Dhyana, Samadhi</li>
+                <li><strong>4 Paths of Yoga:</strong> Karma (action), Bhakti (devotion), Jnana (knowledge), Raja (meditation)</li>
+                <li><strong>5 Koshas:</strong> Layers of being from physical to bliss body</li>
+            </ul>
+            
+            <h3>Modern Yoga Landscape</h3>
+            <p>From Hatha Yoga (15th century) to contemporary styles like Vinyasa, Iyengar, and Yin Yoga. Scientific research confirms benefits for flexibility, stress reduction, and chronic pain management.</p>
+            
+            <iframe src="https://www.youtube.com/embed/j7rKKpwdXNE" title="History of Yoga" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Reflect on which of the 8 Limbs resonates most with your current life situation. Journal about one Yama or Niyama you'd like to develop.</p>
+            
+            <p><a href="https://www.yogajournal.com/yoga-101/yogas-eight-limbs" class="resource-link">Yoga Journal: The 8 Limbs Explained</a></p>
+            
+            <button onclick="startQuiz(1)">Take Quiz</button>
+            <div id="quiz1" class="quiz hidden">
+                <p>1. Which text systematized the 8 Limbs of Yoga?</p>
+                <button onclick="checkAnswer(1, 'A', 1)">A. Yoga Sutras</button>
+                <button onclick="checkAnswer(1, 'B', 1)">B. Bhagavad Gita</button>
+                <p>2. Which is NOT one of the 4 Paths of Yoga?</p>
+                <button onclick="checkAnswer(1, 'A', 2)">A. Hatha</button>
+                <button onclick="checkAnswer(1, 'B', 2)">B. Bhakti</button>
+                <p id="result1" class="result"></p>
+                <p class="timer" id="timer1">Time Left: 60s</p>
+            </div>
+            <button id="continue1" class="continue-btn hidden" onclick="continueToNextModule(1)">Continue to Module 2</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback1" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(1)">Submit Feedback</button>
+                <p id="feedbackLog1"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 2 -->
+    <div id="page2" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(2)">
+            Module 2: Asana Practice <span class="badge" id="badge2">Locked</span>
+        </div>
+        <div id="content2" class="content">
+            <img src="https://images.unsplash.com/photo-1545389336-cf090694435e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Yoga asana practice" class="module-image">
+            
+            <h3>Fundamental Poses</h3>
+            <div class="pose-card">
+                <h4>Standing Poses</h4>
+                <ul>
+                    <li><strong>Tadasana (Mountain):</strong> Foundation for alignment</li>
+                    <li><strong>Virabhadrasana I/II (Warrior):</strong> Strength and stability</li>
+                    <li><strong>Trikonasana (Triangle):</strong> Lateral flexibility</li>
+                </ul>
+            </div>
+            
+            <div class="pose-card">
+                <h4>Seated Poses</h4>
+                <ul>
+                    <li><strong>Sukhasana (Easy Seat):</strong> Meditation foundation</li>
+                    <li><strong>Paschimottanasana (Forward Fold):</strong> Hamstring stretch</li>
+                    <li><strong>Baddha Konasana (Butterfly):</strong> Hip opener</li>
+                </ul>
+            </div>
+            
+            <h3>Alignment Principles</h3>
+            <ul>
+                <li><strong>Foundation:</strong> Root through appropriate body parts</li>
+                <li><strong>Stacking Joints:</strong> Knees over ankles, shoulders over hips</li>
+                <li><strong>Spinal Awareness:</strong> Maintaining natural curves</li>
+            </ul>
+            
+            <h3>Sequencing Basics</h3>
+            <p>Traditional vinyasa patterns: Surya Namaskar (Sun Salutation) A & B. Sample beginner sequence: Centering → Warm-up → Standing → Balancing → Seated → Savasana.</p>
+            
+            <iframe src="https://www.youtube.com/embed/b1H3xO3x_Js" title="Sun Salutation Tutorial" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Practice Sun Salutation A three times, focusing on breath-movement synchronization (inhale up, exhale down).</p>
+            
+            <p><a href="https://www.yogajournal.com/poses/yoga-poses/" class="resource-link">Yoga Pose Library</a></p>
+            
+            <button onclick="startQuiz(2)">Take Quiz</button>
+            <div id="quiz2" class="quiz hidden">
+                <p>1. Which pose is considered the foundation for alignment?</p>
+                <button onclick="checkAnswer(2, 'A', 1)">A. Tadasana</button>
+                <button onclick="checkAnswer(2, 'B', 1)">B. Downward Dog</button>
+                <p>2. What should you inhale during in Sun Salutation?</p>
+                <button onclick="checkAnswer(2, 'A', 2)">A. Arms rising</button>
+                <button onclick="checkAnswer(2, 'B', 2)">B. Forward fold</button>
+                <p id="result2" class="result"></p>
+                <p class="timer" id="timer2">Time Left: 60s</p>
+            </div>
+            <button id="continue2" class="continue-btn hidden" onclick="continueToNextModule(2)">Continue to Module 3</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback2" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(2)">Submit Feedback</button>
+                <p id="feedbackLog2"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 3 -->
+    <div id="page3" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(3)">
+            Module 3: Pranayama & Breathwork <span class="badge" id="badge3">Locked</span>
+        </div>
+        <div id="content3" class="content">
+            <img src="https://images.unsplash.com/photo-1518604666860-9ed391f76460?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Pranayama practice" class="module-image">
+            
+            <h3>Breath Physiology</h3>
+            <p>How breathing affects the autonomic nervous system: slow diaphragmatic breathing activates the parasympathetic (rest-and-digest) response, reducing cortisol by up to 50%.</p>
+            
+            <h3>Core Techniques</h3>
+            <div class="pose-card">
+                <h4>Nadi Shodhana (Alternate Nostril)</h4>
+                <p>Balances hemispheres of the brain. Technique: Close right nostril, inhale left; close left, exhale right; repeat 5-10 cycles.</p>
+            </div>
+            
+            <div class="pose-card">
+                <h4>Kapalabhati (Skull Shining)</h4>
+                <p>Energizing breath. Technique: Passive inhales, forceful exhales (1-2 per second) for 30 seconds to 1 minute.</p>
+            </div>
+            
+            <div class="pose-card">
+                <h4>Box Breathing</h4>
+                <p>Military technique for focus. Pattern: Inhale 4s → Hold 4s → Exhale 4s → Hold 4s.</p>
+            </div>
+            
+            <h3>Scientific Benefits</h3>
+            <ul class="benefits-list">
+                <li>Reduces blood pressure</li>
+                <li>Improves HRV (Heart Rate Variability)</li>
+                <li>Enhances pulmonary function</li>
+                <li>Decreases anxiety symptoms</li>
+                <li>Boosts oxygen saturation</li>
+            </ul>
+            
+            <iframe src="https://www.youtube.com/embed/sT1DXHR0URU" title="Pranayama Techniques" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Practice 5 minutes of diaphragmatic breathing before bed for 3 nights, noting sleep quality changes.</p>
+            
+            <p><a href="https://www.artofliving.org/us-en/breathwork" class="resource-link">Art of Living: Breathwork Resources</a></p>
+            
+            <button onclick="startQuiz(3)">Take Quiz</button>
+            <div id="quiz3" class="quiz hidden">
+                <p>1. Which breath balances brain hemispheres?</p>
+                <button onclick="checkAnswer(3, 'A', 1)">A. Nadi Shodhana</button>
+                <button onclick="checkAnswer(3, 'B', 1)">B. Kapalabhati</button>
+                <p>2. What system does diaphragmatic breathing activate?</p>
+                <button onclick="checkAnswer(3, 'A', 2)">A. Parasympathetic</button>
+                <button onclick="checkAnswer(3, 'B', 2)">B. Sympathetic</button>
+                <p id="result3" class="result"></p>
+                <p class="timer" id="timer3">Time Left: 60s</p>
+            </div>
+            <button id="continue3" class="continue-btn hidden" onclick="continueToNextModule(3)">Continue to Module 4</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback3" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(3)">Submit Feedback</button>
+                <p id="feedbackLog3"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 4 -->
+    <div id="page4" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(4)">
+            Module 4: Meditation Foundations <span class="badge" id="badge4">Locked</span>
+        </div>
+        <div id="content4" class="content">
+            <img src="https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Meditation practice" class="module-image">
+            
+            <h3>Meditation Traditions</h3>
+            <table>
+                <tr><th>Tradition</th><th>Focus</th><th>Example Practice</th></tr>
+                <tr><td>Vipassana</td><td>Mindfulness</td><td>Body scan</td></tr>
+                <tr><td>Zen</td><td>Koan study</td><td>"What is the sound of one hand?"</td></tr>
+                <tr><td>Transcendental</td><td>Mantra repetition</td><td>Silent mantra</td></tr>
+                <tr><td>Loving-Kindness</td><td>Compassion</td><td>"May you be happy" phrases</td></tr>
+            </table>
+            
+            <h3>Core Techniques</h3>
+            <div class="meditation-technique">
+                <h4>Mindfulness Meditation</h4>
+                <p>Focus on present-moment awareness without judgment. Steps: 1) Anchor to breath 2) Notice distractions 3) Gently return.</p>
+            </div>
+            
+            <div class="meditation-technique">
+                <h4>Body Scan</h4>
+                <p>Systematic attention through body parts. Benefits: Reduces somatic stress by 27% (Harvard study).</p>
+            </div>
+            
+            <div class="meditation-technique">
+                <h4>Mantra Meditation</h4>
+                <p>Repetition of sacred sounds (Om) or phrases. Neurological effect: Increases theta brain waves.</p>
+            </div>
+            
+            <h3>Scientific Benefits</h3>
+            <ul class="benefits-list">
+                <li>8-week MBSR reduces amygdala density (stress center)</li>
+                <li>Increases gray matter in prefrontal cortex</li>
+                <li>Lowers inflammatory markers (IL-6)</li>
+                <li>Improves attention span by 16%</li>
+                <li>Reduces relapse in depression by 50%</li>
+            </ul>
+            
+            <iframe src="https://www.youtube.com/embed/O-6f5wQXSu8" title="Mindfulness Meditation Guide" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Practice 10 minutes of mindfulness meditation daily for 3 days, noting mental states before/after.</p>
+            
+            <p><a href="https://www.headspace.com/meditation/techniques" class="resource-link">Headspace: Meditation Techniques</a></p>
+            
+            <button onclick="startQuiz(4)">Take Quiz</button>
+            <div id="quiz4" class="quiz hidden">
+                <p>1. Which meditation focuses on compassion phrases?</p>
+                <button onclick="checkAnswer(4, 'A', 1)">A. Loving-Kindness</button>
+                <button onclick="checkAnswer(4, 'B', 1)">B. Vipassana</button>
+                <p>2. What brain waves increase during mantra meditation?</p>
+                <button onclick="checkAnswer(4, 'A', 2)">A. Theta</button>
+                <button onclick="checkAnswer(4, 'B', 2)">B. Beta</button>
+                <p id="result4" class="result"></p>
+                <p class="timer" id="timer4">Time Left: 60s</p>
+            </div>
+            <button id="continue4" class="continue-btn hidden" onclick="continueToNextModule(4)">Continue to Module 5</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback4" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(4)">Submit Feedback</button>
+                <p id="feedbackLog4"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 5 -->
+    <div id="page5" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(5)">
+            Module 5: Teaching Methodology <span class="badge" id="badge5">Locked</span>
+        </div>
+        <div id="content5" class="content">
+            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Yoga teaching" class="module-image">
+            
+            <h3>Class Structure</h3>
+            <ol>
+                <li><strong>Opening (5-10 min):</strong> Centering, intention-setting</li>
+                <li><strong>Warm-up (10-15 min):</strong> Gentle stretches, Sun Salutations</li>
+                <li><strong>Main Sequence (20-30 min):</strong> Peak poses with preparation</li>
+                <li><strong>Cool Down (10 min):</strong> Forward folds, twists</li>
+                <li><strong>Final Relaxation (5-10 min):</strong> Savasana, meditation</li>
+            </ol>
+            
+            <h3>Cueing Techniques</h3>
+            <div class="pose-card">
+                <h4>Effective Cue Types</h4>
+                <ul>
+                    <li><strong>Anatomical:</strong> "Rotate thighs inward"</li>
+                    <li><strong>Energetic:</strong> "Root down to rise up"</li>
+                    <li><strong>Visual:</strong> "Imagine your spine like a string of pearls"</li>
+                    <li><strong>Breath-based:</strong> "Inhale to lengthen, exhale to deepen"</li>
+                </ul>
+            </div>
+            
+            <h3>Modifications & Props</h3>
+            <table>
+                <tr><th>Pose</th><th>Modification</th><th>Prop</th></tr>
+                <tr><td>Downward Dog</td><td>Bent knees</td><td>Blocks under hands</td></tr>
+                <tr><td>Bridge</td><td>Feet wider</td><td>Block under sacrum</td></tr>
+                <tr><td>Seated Forward Fold</td><td>Bent knees</td><td>Strap around feet</td></tr>
+            </table>
+            
+            <h3>Sample Class Plan</h3>
+            <p><strong>Theme:</strong> Grounding through standing poses<br>
+            <strong>Sequence:</strong> Centering → Cat/Cow → Sun Salutation A ×3 → Warrior I → Warrior II → Triangle → Tree → Seated Forward Fold → Savasana</p>
+            
+            <iframe src="https://www.youtube.com/embed/v7AYKMP6rOE" title="Yoga Teaching Cues" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Design a 45-minute beginner class focusing on hip openers, including 3 modifications.</p>
+            
+            <p><a href="https://www.yogaalliance.org/" class="resource-link">Yoga Alliance Teaching Standards</a></p>
+            
+            <button onclick="startQuiz(5)">Take Quiz</button>
+            <div id="quiz5" class="quiz hidden">
+                <p>1. What percentage of class should be warm-up?</p>
+                <button onclick="checkAnswer(5, 'A', 1)">A. 15-25%</button>
+                <button onclick="checkAnswer(5, 'B', 1)">B. 40-50%</button>
+                <p>2. Which cue is anatomical?</p>
+                <button onclick="checkAnswer(5, 'A', 2)">A. "Rotate thighs inward"</button>
+                <button onclick="checkAnswer(5, 'B', 2)">B. "Root like a tree"</button>
+                <p id="result5" class="result"></p>
+                <p class="timer" id="timer5">Time Left: 60s</p>
+            </div>
+            <button id="continue5" class="continue-btn hidden" onclick="continueToNextModule(5)">Continue to Module 6</button>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback5" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(5)">Submit Feedback</button>
+                <p id="feedbackLog5"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 6 -->
+    <div id="page6" class="module-container hidden locked">
+        <div class="module" onclick="toggleModule(6)">
+            Module 6: Yoga Lifestyle & Integration <span class="badge" id="badge6">Locked</span>
+        </div>
+        <div id="content6" class="content">
+            <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Yoga lifestyle" class="module-image">
+            
+            <h3>Yogic Diet Principles</h3>
+            <div class="pose-card">
+                <h4>Sattvic Foods</h4>
+                <p>Promote clarity: Fresh fruits, whole grains, nuts, dairy, mild spices. Example meal: Kitchari (mung beans + rice + turmeric).</p>
+            </div>
+            
+            <h3>Daily Routines (Dinacharya)</h3>
+            <ul>
+                <li><strong>Morning:</strong> Tongue scraping, oil pulling, sun salutations</li>
+                <li><strong>Midday:</strong> Mindful eating, short walks</li>
+                <li><strong>Evening:</strong> Digital detox, journaling, legs-up-the-wall</li>
+            </ul>
+            
+            <h3>Ethical Guidelines</h3>
+            <div class="pose-card">
+                <h4>Yamas (Restraints)</h4>
+                <ol>
+                    <li><strong>Ahimsa:</strong> Non-violence (to self & others)</li>
+                    <li><strong>Satya:</strong> Truthfulness</li>
+                    <li><strong>Asteya:</strong> Non-stealing (time/energy)</li>
+                    <li><strong>Brahmacharya:</strong> Moderation</li>
+                    <li><strong>Aparigraha:</strong> Non-possessiveness</li>
+                </ol>
+            </div>
+            
+            <h3>Building a Personal Practice</h3>
+            <p><strong>5-Step Approach:</strong><br>
+            1) Set intention (stress relief? flexibility?)<br>
+            2) Choose realistic duration (10-30 min)<br>
+            3) Select focus (asana, pranayama, meditation)<br>
+            4) Create sacred space<br>
+            5) Track progress</p>
+            
+            <iframe src="https://www.youtube.com/embed/VaaJR1AJgH4" title="Yogic Lifestyle Tips" allowfullscreen></iframe>
+            
+            <h3>Practical Exercise</h3>
+            <p>Implement one Yama and one Niyama for a week, journaling about the experience.</p>
+            
+            <p><a href="https://www.ayurveda.com/resources/articles/ayurveda-lifestyle-guide" class="resource-link">Ayurvedic Lifestyle Guide</a></p>
+            
+            <button onclick="startQuiz(6)">Take Quiz</button>
+            <div id="quiz6" class="quiz hidden">
+                <p>1. Which is a Sattvic food?</p>
+                <button onclick="checkAnswer(6, 'A', 1)">A. Fresh fruits</button>
+                <button onclick="checkAnswer(6, 'B', 1)">B. Fried foods</button>
+                <p>2. Which Yama means non-violence?</p>
+                <button onclick="checkAnswer(6, 'A', 2)">A. Ahimsa</button>
+                <button onclick="checkAnswer(6, 'B', 2)">B. Satya</button>
+                <p id="result6" class="result"></p>
+                <p class="timer" id="timer6">Time Left: 60s</p>
+            </div>
+            <div class="feedback">
+                <h3>Feedback</h3>
+                <textarea id="feedback6" maxlength="500" placeholder="Share your thoughts (max 500 chars)..."></textarea>
+                <button onclick="submitFeedback(6)">Submit Feedback</button>
+                <p id="feedbackLog6"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration -->
+    <div class="celebration" id="celebration" style="display: none;">
+        <h2>Namaste, <span id="celebrateName">Yogi</span>!</h2>
+        <p>You've completed all 6 modules of Yoga & Meditation Certification!</p>
+        <p>Your dedication to this journey honors the ancient tradition while bringing its benefits to the modern world.</p>
+        <button onclick="shareSuccess()">Share Your Achievement</button>
+    </div>
+    <button id="celebrateBtn" onclick="showCelebration()" disabled>Complete Your Journey</button>
+
+    <script>
+        const totalModules = 6;
+        const correctAnswers = {
+            1: { 1: 'A', 2: 'A' },
+            2: { 1: 'A', 2: 'A' },
+            3: { 1: 'A', 2: 'A' },
+            4: { 1: 'A', 2: 'A' },
+            5: { 1: 'A', 2: 'A' },
+            6: { 1: 'A', 2: 'A' }
+        };
+        const badgeNames = {
+            1: "Yoga Philosopher",
+            2: "Asana Expert",
+            3: "Breath Master",
+            4: "Meditation Guide",
+            5: "Skilled Teacher",
+            6: "Holistic Yogi"
+        };
+        let completedModules = 0;
+        let quizScores = {};
+        let totalScore = 0;
+        let timers = {};
+        let userName = localStorage.getItem('userName') || 'Yogi';
+
+        function initializeProgress() {
+            completedModules = 0;
+            totalScore = 0;
+            document.getElementById('userName').innerText = userName;
+            for (let i = 1; i <= totalModules; i++) {
+                const status = localStorage.getItem(`quiz${i}`);
+                if (status === "completed") {
+                    completedModules++;
+                    totalScore += 2;
+                    document.getElementById(`badge${i}`).innerText = `${badgeNames[i]} ✔`;
+                    document.getElementById(`badge${i}`).classList.add("completed");
+                    document.getElementById(`page${i}`).querySelector('.module').classList.add("completed");
+                    unlockNextModule(i);
+                    document.getElementById(`continue${i}`).classList.remove("hidden");
+                } else {
+                    document.getElementById(`badge${i}`).innerText = i === 1 ? "Not Started" : "Locked";
+                }
+                const feedback = localStorage.getItem(`feedback${i}`);
+                if (feedback) document.getElementById(`feedbackLog${i}`).innerText = `Your Feedback: "${feedback}"`;
+            }
+            updateDashboard();
+            checkCompletion();
+        }
+
+        function unlockNextModule(currentModuleId) {
+            const nextModuleId = currentModuleId + 1;
+            if (nextModuleId <= totalModules) {
+                const nextModule = document.getElementById(`page${nextModuleId}`);
+                const nextButton = document.getElementById(`page${nextModuleId}Btn`);
+                nextModule.classList.remove("locked");
+                nextButton.disabled = false;
+                document.getElementById(`badge${nextModuleId}`).innerText = "Not Started";
+                console.log(`Unlocked Module ${nextModuleId}`);
+            }
+        }
+
+        function updateDashboard() {
+            document.getElementById("completedModules").innerText = completedModules;
+            document.getElementById("totalScore").innerText = totalScore;
+            const progress = (completedModules / totalModules) * 100;
+            document.getElementById("progress").style.width = `${progress}%`;
+        }
+
+        function checkCompletion() {
+            if (completedModules === totalModules) {
+                document.getElementById("celebrateBtn").disabled = false;
+            }
+        }
+
+        function toggleModule(moduleId) {
+            const content = document.getElementById(`content${moduleId}`);
+            content.style.display = content.style.display === "block" ? "none" : "block";
+        }
+
+        function startQuiz(moduleId) {
+            document.getElementById(`quiz${moduleId}`).classList.remove("hidden");
+            quizScores[moduleId] = { 1: false, 2: false };
+            startTimer(moduleId);
+        }
+
+        function startTimer(moduleId) {
+            let timeLeft = 60;
+            const timerElement = document.getElementById(`timer${moduleId}`);
+            timers[moduleId] = setInterval(() => {
+                timeLeft--;
+                timerElement.innerText = `Time Left: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timers[moduleId]);
+                    timerElement.innerText = "Time's Up!";
+                    document.querySelectorAll(`#quiz${moduleId} button`).forEach(btn => btn.disabled = true);
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(moduleId, answer, questionNum) {
+            const resultElement = document.getElementById(`result${moduleId}`);
+            if (answer === correctAnswers[moduleId][questionNum]) {
+                quizScores[moduleId][questionNum] = true;
+                totalScore++;
+                updateQuizResult(moduleId);
+            } else {
+                resultElement.innerHTML = `❌ Incorrect on Question ${questionNum}.`;
+                resultElement.style.color = "#dc3545";
+            }
+        }
+
+        function updateQuizResult(moduleId) {
+            const resultElement = document.getElementById(`result${moduleId}`);
+            const quizButtons = document.querySelectorAll(`#quiz${moduleId} button`);
+            const allCorrect = Object.values(quizScores[moduleId]).every(score => score);
+            if (allCorrect) {
+                resultElement.innerHTML = `✅ All Correct! Score: 2/2 - Badge: ${badgeNames[moduleId]}`;
+                resultElement.style.color = "#4a6fa5";
+                localStorage.setItem(`quiz${moduleId}`, "completed");
+                document.getElementById(`badge${moduleId}`).innerText = `${badgeNames[moduleId]} ✔`;
+                document.getElementById(`badge${moduleId}`).classList.add("completed");
+                document.getElementById(`page${moduleId}`).querySelector('.module').classList.add("completed");
+                completedModules++;
+                updateDashboard();
+                unlockNextModule(moduleId);
+                document.getElementById(`continue${moduleId}`).classList.remove("hidden");
+                quizButtons.forEach(btn => btn.disabled = true);
+                clearInterval(timers[moduleId]);
+                document.getElementById(`timer${moduleId}`).innerText = "Quiz Completed!";
+                console.log(`Module ${moduleId} completed, continue button shown`);
+            } else {
+                resultElement.innerHTML = `✅ Correct so far. Score: ${Object.values(quizScores[moduleId]).filter(s => s).length}/2`;
+                resultElement.style.color = "#4a6fa5";
+            }
+        }
+
+        function continueToNextModule(currentModuleId) {
+            const nextModuleId = currentModuleId + 1;
+            if (nextModuleId <= totalModules) {
+                showPage(nextModuleId);
+                toggleModule(nextModuleId);
+                window.scrollTo(0, 0);
+                console.log(`Navigated to Module ${nextModuleId} and scrolled to top`);
+            }
+        }
+
+        function submitFeedback(moduleId) {
+            const feedbackText = document.getElementById(`feedback${moduleId}`).value.trim();
+            if (feedbackText) {
+                localStorage.setItem(`feedback${moduleId}`, feedbackText);
+                document.getElementById(`feedbackLog${moduleId}`).innerText = `Your Feedback: "${feedbackText}"`;
+                alert("Thank you for your feedback!");
+                document.getElementById(`feedback${moduleId}`).value = "";
+            }
+        }
+
+        function showCelebration() {
+            document.getElementById('celebrateName').innerText = userName;
+            document.getElementById('celebration').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function shareSuccess() {
+            alert("Share your yoga certification on social media (simulated)!");
+        }
+
+        function showPage(pageNumber) {
+            document.querySelectorAll(".module-container").forEach((page, index) => {
+                page.classList.toggle("hidden", index + 1 !== pageNumber);
+            });
+            window.scrollTo(0, 0);
+            console.log(`Showing page ${pageNumber} and scrolled to top`);
+        }
+
+        function resetProgress() {
+            if (confirm("Reset all progress?")) {
+                localStorage.clear();
+                userName = prompt("Enter your yoga name:", "Yogi") || "Yogi";
+                localStorage.setItem('userName', userName);
+                location.reload();
+            }
+        }
+
+        window.onload = () => {
+            if (!localStorage.getItem('userName')) {
+                userName = prompt("Welcome to Yoga & Meditation! Enter your name:", "Yogi") || "Yogi";
+                localStorage.setItem('userName', userName);
+            }
+            initializeProgress();
+            showPage(1);
+        };
+    </script>
+
+</body>
+</html>
