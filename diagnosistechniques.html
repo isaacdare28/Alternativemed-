@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn diagnosis techniques in alternative medicine with an educational, app-like interface for individuals, students, and professionals.">
+    <meta name="keywords" content="alternative medicine, diagnosis techniques, TCM, Ayurveda, holistic health, learning">
+    <title>Diagnosis Techniques</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- React and Babel CDNs -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.5/babel.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .technique-card, .resource-card {
+            min-height: 280px; /* Consistent card height for alignment */
+        }
+        .quiz-card {
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Sidebar Component
+        const Sidebar = ({ isOpen, toggleSidebar }) => (
+            <div className={`fixed top-0 left-0 h-full w-64 bg-blue-800 text-white p-6 sidebar ${!isOpen ? 'sidebar-hidden' : ''} lg:translate-x-0 z-20 shadow-lg`}>
+                <div className="flex justify-between items-center mb-8">
+                    <h2 className="text-xl font-bold">AltMed Learning</h2>
+                    <button onClick={toggleSidebar} className="lg:hidden text-white">
+                        <i className="fas fa-times"></i>
+                    </button>
+                </div>
+                <nav>
+                    <ul className="space-y-4">
+                        <li><a href="#introduction" className="hover:text-blue-300 text-lg" onClick={toggleSidebar}>Introduction</a></li>
+                        <li><a href="#techniques" className="hover:text-blue-300 text-lg" onClick={toggleSidebar}>Techniques</a></li>
+                        <li><a href="#resources" className="hover:text-blue-300 text-lg" onClick={toggleSidebar}>Resources</a></li>
+                        <li><a href="#quiz" className="hover:text-blue-300 text-lg" onClick={toggleSidebar}>Quiz</a></li>
+                        <li><a href="#glossary" className="hover:text-blue-300 text-lg" onClick={toggleSidebar}>Glossary</a></li>
+                        <li><a href="#faq" className="hover:text-blue-300 text-lg" onClick={toggleSidebar}>FAQ</a></li>
+                    </ul>
+                </nav>
+            </div>
+        );
+
+        // Modal Component
+        const Modal = ({ isOpen, onClose, title, children }) => (
+            isOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-30 modal">
+                    <div className="bg-white rounded-lg p-8 w-11/12 md:w-1/2">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-2xl font-semibold text-blue-700">{title}</h3>
+                            <button onClick={onClose} className="text-gray-600 hover:text-gray-800">
+                                <i className="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        <div className="text-gray-700 leading-relaxed">{children}</div>
+                    </div>
+                </div>
+            )
+        );
+
+        // Collapsible FAQ/Quiz Item
+        const CollapsibleItem = ({ question, answer, isQuiz = false, onAnswer }) => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+            return (
+                <div className="bg-white rounded-lg shadow-md p-6">
+                    <button
+                        className="w-full text-left text-lg font-medium text-blue-700 flex justify-between items-center"
+                        onClick={() => setIsOpen(!isOpen)}
+                    >
+                        <span>{question}</span>
+                        <i className={`fas ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                    </button>
+                    {isOpen && (
+                        <div className="mt-3 text-gray-600 leading-relaxed">
+                            {isQuiz ? (
+                                <div>
+                                    {answer.options.map((option, index) => (
+                                        <div key={index} className="flex items-center mb-2">
+                                            <input
+                                                type="radio"
+                                                name={question}
+                                                value={option}
+                                                checked={selectedAnswer === option}
+                                                onChange={() => {
+                                                    setSelectedAnswer(option);
+                                                    onAnswer(option === answer.correct);
+                                                }}
+                                                className="mr-2"
+                                            />
+                                            <label>{option}</label>
+                                        </div>
+                                    ))}
+                                    {selectedAnswer && (
+                                        <p className={selectedAnswer === answer.correct ? 'text-green-600' : 'text-red-600'}>
+                                            {selectedAnswer === answer.correct ? 'Correct!' : `Incorrect. ${answer.explanation}`}
+                                        </p>
+                                    )}
+                                </div>
+                            ) : (
+                                <p>{answer}</p>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // Main App Component
+        const App = () => {
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+            const [modal, setModal] = useState({ isOpen: false, title: '', content: '' });
+            const [quizResults, setQuizResults] = useState([]);
+
+            const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+            const openModal = (title, content) => setModal({ isOpen: true, title, content });
+            const closeModal = () => setModal({ isOpen: false, title: '', content: '' });
+
+            const handleQuizAnswer = (index, isCorrect) => {
+                setQuizResults(prev => {
+                    const newResults = [...prev];
+                    newResults[index] = isCorrect;
+                    return newResults;
+                });
+            };
+
+            // Smooth Scroll
+            useEffect(() => {
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                    });
+                });
+            }, []);
+
+            // Download PDF (Placeholder for actual PDF generation)
+            const downloadPDF = () => {
+                const link = document.createElement('a');
+                link.href = '#'; // Replace with actual PDF URL or generate dynamically
+                link.download = 'AltMed_Diagnosis_Summary.pdf';
+                link.click();
+                openModal('Download', 'PDF summary will be available soon. For now, explore the resources section for detailed information.');
+            };
+
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    {/* Header */}
+                    <header className="bg-blue-700 text-white py-4 shadow-lg">
+                        <div className="container mx-auto px-4 flex justify-between items-center">
+                            <h1 className="text-2xl font-bold tracking-tight">AltMed Diagnosis Learning</h1>
+                            <button onClick={toggleSidebar} className="lg:hidden text-white">
+                                <i className="fas fa-bars text-2xl"></i>
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Sidebar */}
+                    <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+
+                    {/* Overlay for Mobile Sidebar */}
+                    {sidebarOpen && (
+                        <div
+                            className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"
+                            onClick={toggleSidebar}
+                        ></div>
+                    )}
+
+                    {/* Main Content */}
+                    <main className="container mx-auto px-4 py-8 lg:ml-64">
+                        {/* Introduction */}
+                        <section id="introduction" className="bg-white rounded-xl p-8 mb-8 shadow-md">
+                            <h2 className="text-3xl font-semibold text-blue-700 mb-4">Introduction to Alternative Medicine Diagnostics</h2>
+                            <p className="text-gray-700 leading-relaxed">
+                                 Learn about methods like pulse diagnosis and iridology, their historical roots, and their applications in systems like TCM and Ayurveda. Each technique includes curated resources for further study.
+                            </p>
+                            <button
+                                onClick={() => openModal('Why Study Alternative Diagnostics?', 'Understanding alternative diagnostics equips learners with holistic perspectives on health. For students, it complements medical studies; for professionals, it enhances integrative practice; for individuals, it fosters informed health choices. Start with resources like NCCIH for evidence-based insights.')}
+                                className="mt-4 text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                                Learn More
+                            </button>
+                            <button
+                                onClick={downloadPDF}
+                                className="mt-4 ml-4 text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                                <i className="fas fa-download mr-2"></i>Download Summary
+                            </button>
+                        </section>
+
+                        {/* Techniques */}
+                        <section id="techniques" className="mb-8">
+                            <h2 className="text-3xl font-semibold text-blue-700 mb-6">Diagnostic Techniques</h2>
+                            <p className="text-gray-700 mb-6">Explore key diagnostic methods, their origins, and practical applications. Each technique includes a vetted resource for in-depth learning.</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {[
+                                    {
+                                        icon: 'fa-heartbeat',
+                                        title: 'Pulse Diagnosis (TCM)',
+                                        desc: 'Analyzes pulse rhythm, depth, and strength to assess qi, yin, and yang balance. Originating in ancient China, it’s widely used in TCM.',
+                                        history: 'Developed over 2,000 years ago, documented in texts like the Huangdi Neijing.',
+                                        limitation: 'Requires extensive training; subjective interpretation varies.',
+                                        link: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6414180/',
+                                        resource: 'NCBI: Peer-reviewed study on pulse diagnosis in TCM, detailing methodology and clinical use.'
+                                    },
+                                    {
+                                        icon: 'fa-tongue',
+                                        title: 'Tongue Diagnosis (TCM)',
+                                        desc: 'Examines tongue color, coating, and shape to diagnose internal imbalances. A red tongue may indicate heat; a pale one, deficiency.',
+                                        history: 'Integral to TCM since the Han Dynasty, standardized in classical texts.',
+                                        limitation: 'Lacks scientific validation; influenced by external factors like diet.',
+                                        link: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8338677/',
+                                        resource: 'NCBI: Review of tongue diagnosis, exploring its diagnostic reliability.'
+                                    },
+                                    {
+                                        icon: 'fa-eye',
+                                        title: 'Iridology',
+                                        desc: 'Maps iris patterns to organ health, used in naturopathy. Patterns may suggest systemic issues, but evidence is limited.',
+                                        history: 'Introduced in the 19th century by Ignaz von Peczely, popularized in holistic circles.',
+                                        limitation: 'No robust scientific support; considered pseudoscientific by mainstream medicine.',
+                                        link: 'https://www.mskcc.org/cancer-care/integrative-medicine/herbs/iridology',
+                                        resource: 'MSKCC: Evidence-based summary critiquing iridology’s diagnostic claims.'
+                                    },
+                                    {
+                                        icon: 'fa-leaf',
+                                        title: 'Ayurvedic Diagnosis',
+                                        desc: 'Assesses dosha imbalances (Vata, Pitta, Kapha) via pulse reading, observation, and questioning.',
+                                        history: 'Rooted in 3,000-year-old Vedic texts like the Charaka Samhita.',
+                                        limitation: 'Subjective; requires practitioner expertise for accuracy.',
+                                        link: 'https://www.nccih.nih.gov/health/ayurvedic-medicine-in-depth',
+                                        resource: 'NCCIH: Detailed guide to Ayurvedic diagnostics, including pulse and dosha assessment.'
+                                    },
+                                    {
+                                        icon: 'fa-running',
+                                        title: 'Applied Kinesiology',
+                                        desc: 'Tests muscle strength to diagnose organ or nutritional issues, often in chiropractic care.',
+                                        history: 'Developed in the 1960s by George Goodheart, blending Western and Eastern concepts.',
+                                        limitation: 'Lacks consistent scientific evidence; results vary by practitioner.',
+                                        link: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4300067/',
+                                        resource: 'NCBI: Critical analysis of applied kinesiology’s diagnostic validity.'
+                                    },
+                                    {
+                                        icon: 'fa-wave-square',
+                                        title: 'Bioresonance',
+                                        desc: 'Uses electromagnetic signals to diagnose conditions like allergies, though widely debated.',
+                                        history: 'Emerged in the 1970s in Germany, rooted in bioenergetic theories.',
+                                        limitation: 'Minimal scientific backing; considered experimental.',
+                                        link: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8277308/',
+                                        resource: 'NCBI: Review of bioresonance, highlighting its controversial status.'
+                                    }
+                                ].map((tech, index) => (
+                                    <div key={index} className="bg-white rounded-xl p-6 card-hover shadow-md technique-card">
+                                        <h3 className="text-xl font-medium text-blue-700 mb-3">
+                                            <i className={`fas ${tech.icon} mr-2`}></i>{tech.title}
+                                        </h3>
+                                        <p className="text-gray-600 mb-2"><strong>Description:</strong> {tech.desc}</p>
+                                        <p className="text-gray-600 mb-2"><strong>History:</strong> {tech.history}</p>
+                                        <p className="text-gray-600 mb-2"><strong>Limitation:</strong> {tech.limitation}</p>
+                                        <p className="text-gray-500 text-sm mb-3"><strong>Resource:</strong> {tech.resource}</p>
+                                        <a href={tech.link} target="_blank" className="text-blue-600 hover:text-blue-800 font-medium">
+                                            Study Further
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        {/* Resources */}
+                        <section id="resources" className="bg-white rounded-xl p-8 mb-8 shadow-md">
+                            <h2 className="text-3xl font-semibold text-blue-700 mb-6">Educational Resources</h2>
+                            <p className="text-gray-700 mb-6 leading-relaxed">
+                                These vetted resources provide authoritative information for learners at all levels. Explore peer-reviewed studies, institutional guides, and evidence-based summaries.
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {[
+                                    {
+                                        title: 'NCCIH',
+                                        desc: 'U.S. agency offering research, fact sheets, and educational materials on CAM.',
+                                        link: 'https://www.nccih.nih.gov/'
+                                    },
+                                    {
+                                        title: 'NCBI',
+                                        desc: 'Database of peer-reviewed studies on alternative medicine diagnostics.',
+                                        li
