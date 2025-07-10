@@ -2,75 +2,160 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alternative Medicine Video Library</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; background: #fafafa; padding: 20px; }
-    h2 { color: #2a2a2a; }
-    .section { margin-bottom: 40px; background: #fff; padding: 20px; border-radius: 8px; }
-    iframe { width: 100%; max-width: 720px; height: 405px; border: none; margin: 10px 0; }
+    /* Responsive iframe wrapper to maintain 16:9 aspect ratio */
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio (9/16 = 0.5625) */
+      height: 0;
+      overflow: hidden;
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    /* Hover effect for sections */
+    .section {
+      transition: transform 0.2s ease-in-out;
+    }
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
   </style>
 </head>
-<body>
-  <h1>Alternative Medicine Educational Videos</h1>
+<body class="bg-gray-100 font-sans text-gray-800">
+  <header class="bg-white shadow-md py-6 mb-8">
+    <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-900">Alternative Medicine Educational Videos</h1>
+  </header>
 
-  <div class="section">
-    <h2>1. Introduction</h2>
-    <iframe src="https://www.youtube.com/embed/ojeieWWFoWY" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/Fab94FAU-0Q" allowfullscreen></iframe>
-  </div>
+  <main class="container mx-auto px-4">
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">1. Introduction</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/ojeieWWFoWY" title="Introduction to Alternative Medicine" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/Fab94FAU-0Q" title="Alternative Medicine Overview" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>2. Mayo Clinic Evidence-Based Overview</h2>
-    <iframe src="https://www.youtube.com/embed/QZqgGsw1zjo" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/zkHS3hMq0E8" allowfullscreen></iframe>
-  </div>
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">2. Mayo Clinic Evidence-Based Overview</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/QZqgGsw1zjo" title="Mayo Clinic on Alternative Medicine" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/zkHS3hMq0E8" title="Evidence-Based Alternative Medicine" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>3. Herbal Medicine Basics</h2>
-    <iframe src="https://www.youtube.com/embed/qTPOhv1AeDo" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/4uBKMbv9u6I" allowfullscreen></iframe>
-  </div>
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">3. Herbal Medicine Basics</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/qTPOhv1AeDo" title="Basics of Herbal Medicine" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/4uBKMbv9u6I" title="Introduction to Herbal Remedies" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>4. Modern Herbal Insights</h2>
-    <iframe src="https://www.youtube.com/embed/_GqJMCEwJuQ" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/jJNOF-D3kJg" allowfullscreen></iframe>
-  </div>
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">4. Modern Herbal Insights</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/_GqJMCEwJuQ" title="Modern Herbal Medicine Insights" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/jJNOF-D3kJg" title="Advances in Herbal Medicine" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>5. Complementary & Safety</h2>
-    <iframe src="https://www.youtube.com/embed/45EzPZgiNUU" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/zPgUiBPp9mY" allowfullscreen></iframe>
-  </div>
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">5. Complementary & Safety</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/45EzPZgiNUU" title="Complementary Medicine Safety" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/zPgUiBPp9mY" title="Complementary vs Mainstream Medicine" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>6. Traditional Chinese Medicine & Qi</h2>
-    <iframe src="https://www.youtube.com/embed/XAq-Y_R_0Ic" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/j5-dCB8WaqM" allowfullscreen></iframe>
-  </div>
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">6. Traditional Chinese Medicine & Qi</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/XAq-Y_R_0Ic" title="Traditional Chinese Medicine Overview" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/j5-dCB8WaqM" title="Qi in Chinese Medicine" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>7. Acupuncture Features</h2>
-    <iframe src="https://www.youtube.com/embed/iCXfUxHeKRc" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/HOttZVhEuuE" allowfullscreen></iframe>
-  </div>
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">7. Acupuncture Features</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/iCXfUxHeKRc" title="Acupuncture Techniques" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/HOttZVhEuuE" title="Acupuncture Practices" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>8. Acupuncture Science & Pain</h2>
-    <iframe src="https://www.youtube.com/embed/lUMuhXq7D0M" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/UQF4lD-G6Hc" allowfullscreen></iframe>
-  </div>
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">8. Acupuncture Science & Pain</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/lUMuhXq7D0M" title="Science of Acupuncture" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/UQF4lD-G6Hc" title="Acupuncture for Pain Management" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>9. Integrative Health: Mayo Clinic</h2>
-    <iframe src="https://www.youtube.com/embed/Bsa98vRYhrs" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/HoSSGqP5Gh4" allowfullscreen></iframe>
-  </div>
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">9. Integrative Health: Mayo Clinic</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/Bsa98vRYhrs" title="Integrative Health by Mayo Clinic" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/HoSSGqP5Gh4" title="Mayo Clinic on Integrative Medicine" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>10. Myths & Critical Views</h2>
-    <iframe src="https://www.youtube.com/embed/gBxltVUYG34" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/vPjZz2O0hpc" allowfullscreen></iframe>
-  </div>
+    <div class="section bg-white rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">10. Myths & Critical Views</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/gBxltVUYG34" title="Debunking Alternative Medicine Myths" allowfullscreen></iframe>
+        </div>
+        <div class="video-wrapper">
+          <iframe src="https://www.youtube.com/embed/vPjZz2O0hpc" title="Critical Perspectives on Alternative Medicine" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </main>
 </body>
 </html>
